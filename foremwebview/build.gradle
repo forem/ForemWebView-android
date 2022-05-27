@@ -1,0 +1,90 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'maven-publish'
+
+android {
+    compileSdk 31
+
+    buildFeatures {
+        dataBinding true
+    }
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 31
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField("String", "ANDROID_BRIDGE", "\"AndroidBridge\"")
+        buildConfigField("String", "FOREM_AGENT_EXTENSION", "\"ForemWebView/${AndroidClient.versionName}\"")
+        buildConfigField("String", "PASSPORT_AGENT_EXTENSION", "\"ForemWebView/passport\"")
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    implementation("androidx.appcompat:appcompat:1.3.1")
+
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")
+    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("com.google.android.material:material:1.4.0")
+
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
+
+    // WebView
+    implementation("androidx.browser:browser:1.3.0")
+
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-common-java8:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+
+    // Exoplayer
+    implementation("com.google.android.exoplayer:exoplayer-core:2.15.1")
+    implementation("com.google.android.exoplayer:exoplayer-hls:2.15.1")
+    implementation("com.google.android.exoplayer:extension-mediasession:2.15.1")
+    implementation("com.google.android.exoplayer:exoplayer-ui:2.15.1")
+
+    // Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.38.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+
+    // Protobuf
+    implementation("com.google.protobuf:protobuf-javalite:3.14.0")
+
+    // Gson
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Push notifications - FCM
+    implementation("com.google.firebase:firebase-analytics:19.0.2")
+    implementation("com.google.firebase:firebase-messaging:22.0.0")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.github.forem'
+                artifactId = 'foremwebview'
+                version = '1.0'
+            }
+        }
+    }
+}

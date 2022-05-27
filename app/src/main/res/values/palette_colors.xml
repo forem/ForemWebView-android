@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <color name="primary_app_color">@color/white</color>
+  <color name="forem_logo_color">@color/logo_main</color>
+  <color name="forem_logo_light_green">@color/logo_light_green</color>
+  <color name="ic_launcher_background">@color/logo_main</color>
+  <color name="primary_text_color">@color/primary_dark_text</color>
+  <color name="local_forem_delete_background">@color/red</color>
+  <color name="internet_error_snackbar_background">@color/red</color>
+  <color name="error_red_color">@color/red</color>
+  <color name="screen_background">@color/white</color>
+  <!-- Toolbar Component -->
+  <color name="toolbar_background_color">@color/white</color>
+  <color name="toolbar_icon_color">@color/black</color>
+  <color name="toolbar_title_text_color">@color/primary_dark_text</color>
+  <!-- Button Component -->
+  <color name="button_text_color">@color/primary_light_text</color>
+  <color name="button_background_color">@color/forem_logo_color</color>
+  <color name="disable_button_background_color">@color/gray_medium</color>
+  <!-- StatusBar Component -->
+  <color name="status_bar_color">@color/white</color>
+  <!-- Onboarding Palette -->
+  <color name="onboarding_header_background_color">@color/gray_dark</color>
+  <color name="onboarding_header_text_color">@color/primary_light_text</color>
+  <color name="onboarding_header_wave_color">@color/white</color>
+  <color name="onboarding_add_forem_color">@color/blue</color>
+  <color name="onboarding_forem_item_background_color">@color/white</color>
+  <!-- CircularProgressIndicator Component -->
+  <color name="circular_progress_indicator_color">@color/forem_logo_color</color>
+  <!-- Home Palette -->
+  <color name="home_bottom_navigation_background_color">@color/white</color>
+  <color name="home_bottom_navigation_icon_color">@color/black</color>
+  <color name="home_bottom_navigation_disabled_icon_color">@color/gray_medium</color>
+  <!-- Tab Palette -->
+  <color name="tab_selected_text_color">@color/black</color>
+  <color name="tab_not_selected_text_color">@color/gray_medium</color>
+  <!-- Explore Palette -->
+  <color name="explore_forem_item_background_color">@color/white</color>
+  <color name="explore_local_forem_selected_tick_color">@color/forem_logo_color</color>
+  <!-- Input Box Palette -->
+  <color name="input_box_error_color">@color/red</color>
+  <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/black</color>
+  <!-- AlertDialog Palette -->
+  <color name="alert_dialog_button_color">@color/black</color>
+</resources>

@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <style name="Theme.Forem" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="colorPrimary">@color/primary_app_color</item>
+    <item name="colorPrimaryVariant">@color/primary_app_color</item>
+    <item name="colorOnPrimary">@color/primary_app_color</item>
+    <item name="colorSecondary">@color/primary_app_color</item>
+    <item name="colorSecondaryVariant">@color/primary_app_color</item>
+    <item name="colorOnSecondary">@color/primary_app_color</item>
+    <item name="android:statusBarColor">@color/status_bar_color</item>
+    <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    <item name="alertDialogTheme">@style/AlertDialogTheme</item>
+  </style>
+</resources>

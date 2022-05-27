@@ -1,0 +1,159 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <style name="Theme.Forem" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <item name="colorPrimary">@color/primary_app_color</item>
+    <item name="colorPrimaryVariant">@color/primary_app_color</item>
+    <item name="colorOnPrimary">@color/primary_app_color</item>
+    <item name="colorSecondary">@color/primary_app_color</item>
+    <item name="colorSecondaryVariant">@color/primary_app_color</item>
+    <item name="colorOnSecondary">@color/primary_app_color</item>
+    <item name="android:statusBarColor">@color/status_bar_color</item>
+    <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    <item name="alertDialogTheme">@style/AlertDialogTheme</item>
+  </style>
+
+  <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+    <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+    <item name="buttonBarNeutralButtonStyle">@style/NeutralButtonStyle</item>
+    <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    <item name="android:textAppearanceSmall">@style/MyTextAppearance</item>
+    <item name="android:textAppearanceMedium">@style/MyTextAppearance</item>
+    <item name="android:textAppearanceLarge">@style/MyTextAppearance</item>
+  </style>
+
+  <style name="MyTextAppearance" parent="TextAppearance.AppCompat">
+    <item name="android:fontFamily">@font/epilogue_regular</item>
+  </style>
+
+  <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+    <item name="android:textColor">@color/alert_dialog_button_color</item>
+  </style>
+
+  <style name="NeutralButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+    <item name="android:textColor">@color/alert_dialog_button_color</item>
+  </style>
+
+  <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+    <item name="android:textColor">@color/alert_dialog_button_color</item>
+  </style>
+
+  <style name="RoundedShapeableImageView" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSize">4dp</item>
+  </style>
+
+  <style name="PrimaryButton" parent="TextView.Common1">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:fontFamily">@font/epilogue_regular</item>
+    <item name="android:radius">4dp</item>
+    <item name="android:textColor">@color/button_text_color</item>
+    <item name="android:textSize">18sp</item>
+    <item name="backgroundTint">@color/button_background_color</item>
+    <item name="fontFamily">@font/epilogue_regular</item>
+    <item name="minHeight">48dp</item>
+  </style>
+
+  <style name="TabItemTextAppearance" parent="@android:style/TextAppearance.Small">
+    <item name="android:fontFamily">@font/epilogue_bold</item>
+    <item name="android:textAllCaps">false</item>
+    <item name="android:textSize">14sp</item>
+    <item name="fontFamily">@font/epilogue_bold</item>
+  </style>
+
+  <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <item name="android:fontFamily">@font/epilogue_regular</item>
+    <item name="boxBackgroundColor">@color/screen_background</item>
+    <item name="boxCornerRadiusBottomEnd">4dp</item>
+    <item name="boxCornerRadiusBottomStart">4dp</item>
+    <item name="boxCornerRadiusTopEnd">4dp</item>
+    <item name="boxCornerRadiusTopStart">4dp</item>
+    <item name="boxStrokeErrorColor">@color/input_box_error_color</item>
+    <item name="boxStrokeColor">@color/primary_text_color</item>
+    <item name="boxStrokeWidth">1dp</item>
+    <item name="errorEnabled">true</item>
+    <item name="errorIconTint">@color/input_box_error_color</item>
+    <item name="errorTextColor">@color/input_box_error_color</item>
+    <item name="fontFamily">@font/epilogue_regular</item>
+    <item name="hintTextColor">@color/primary_text_color</item>
+    <item name="android:textColor">@color/primary_text_color</item>
+  </style>
+
+  <style name="TextInputEditText" parent="Widget.AppCompat.EditText">
+    <item name="android:fontFamily">sans-serif</item>
+    <item name="hintTextColor">@color/primary_text_color</item>
+    <item name="android:textColor">@color/primary_text_color</item>
+    <item name="android:textCursorDrawable">@drawable/color_cursor</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textStyle">normal</item>
+    <item name="fontFamily">sans-serif</item>
+    <item name="textAllCaps">false</item>
+  </style>
+
+  <style name="Title" parent="TextView.Common1">
+    <item name="android:fontFamily">@font/epilogue_bold</item>
+    <item name="android:textSize">32sp</item>
+    <item name="fontFamily">@font/epilogue_bold</item>
+  </style>
+
+  <style name="Heading3" parent="TextView.Common1">
+    <item name="android:fontFamily">@font/epilogue_bold</item>
+    <item name="android:textSize">18sp</item>
+    <item name="fontFamily">@font/epilogue_bold</item>
+  </style>
+
+  <style name="Subtitle1" parent="TextView.Common1">
+    <item name="android:fontFamily">@font/epilogue_regular</item>
+    <item name="android:textSize">16sp</item>
+    <item name="fontFamily">@font/epilogue_regular</item>
+  </style>
+
+  <style name="Subtitle2" parent="TextView.Common1">
+    <item name="android:fontFamily">@font/epilogue_regular</item>
+    <item name="android:textSize">14sp</item>
+    <item name="fontFamily">@font/epilogue_regular</item>
+  </style>
+  <!-- This style should not be used in layout/*.xml files.-->
+  <style name="TextView.Common1" parent="Widget.AppCompat.TextView">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textAllCaps">false</item>
+    <item name="android:textColor">@color/primary_text_color</item>
+  </style>
+
+  <style name="Toolbar.Background" parent="">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">56dp</item>
+    <item name="android:background">@color/toolbar_background_color</item>
+    <item name="android:elevation">4dp</item>
+  </style>
+
+  <style name="Toolbar.BackArrow" parent="">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:minHeight">48dp</item>
+    <item name="android:minWidth">48dp</item>
+    <item name="android:padding">12dp</item>
+    <item name="android:src">@drawable/ic_baseline_arrow_back_24</item>
+    <item name="tint">@color/toolbar_icon_color</item>
+    <item name="android:elevation">4dp</item>
+  </style>
+
+  <style name="Toolbar.Logo" parent="">
+    <item name="android:layout_width">@dimen/forem_logo_small_width</item>
+    <item name="android:layout_height">@dimen/forem_logo_small_height</item>
+    <item name="android:layout_marginStart">12dp</item>
+    <item name="android:elevation">4dp</item>
+  </style>
+
+  <style name="Toolbar.Title" parent="Heading3">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:background">@color/toolbar_background_color</item>
+    <item name="android:elevation">4dp</item>
+    <item name="android:layout_marginStart">8dp</item>
+    <item name="android:layout_marginEnd">56dp</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textColor">@color/toolbar_title_text_color</item>
+  </style>
+</resources>

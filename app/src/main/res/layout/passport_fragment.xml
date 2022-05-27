@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+
+    <import type="android.view.View" />
+
+    <variable
+      name="main"
+      type="com.forem.android.presentation.passport.PassportFragment" />
+
+    <variable
+      name="viewModel"
+      type="com.forem.android.presentation.passport.PassportViewModel" />
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/passport_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background">
+
+    <View
+      android:id="@+id/top_view"
+      style="@style/Toolbar.Background"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+      android:id="@+id/back_image_view"
+      style="@style/Toolbar.BackArrow"
+      android:contentDescription="@string/navigate_up"
+      android:onClick="@{(v) -> main.onBackClicked()}"
+      app:layout_constraintBottom_toBottomOf="@id/top_view"
+      app:layout_constraintStart_toStartOf="@id/top_view"
+      app:layout_constraintTop_toTopOf="@id/top_view" />
+
+    <TextView
+      android:id="@+id/forem_passport_text_view"
+      style="@style/Toolbar.Title"
+      android:text="@string/forem_passport"
+      app:layout_constraintBottom_toBottomOf="@id/top_view"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/back_image_view"
+      app:layout_constraintTop_toTopOf="@id/top_view" />
+
+    <FrameLayout
+      android:id="@+id/web_view_fragment"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/top_view" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+      android:id="@+id/loading_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:indeterminate="true"
+      android:visibility="@{viewModel.loadingViewVisibility ? View.VISIBLE : View.GONE, default=gone}"
+      app:indicatorColor="@color/circular_progress_indicator_color"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

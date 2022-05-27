@@ -1,0 +1,47 @@
+<resources>
+  <string name="app_name">Forem</string>
+  <string name="welcome_to_forem">Welcome to Forem</string>
+  <string name="forem_description">Forem is open source software empowering creators to reach millions.</string>
+  <string name="featured_forems">Featured Forems</string>
+  <string name="navigate_up">Navigate up</string>
+  <string name="add_to_list">Add to List</string>
+  <string name="add_private_forem">Add Private Forem</string>
+  <string name="add_private_text_1">Know the Forem you want to add?</string>
+  <string name="add_private_text_2">Enter the exact domain below to add a private or unlisted Forem to your list.</string>
+  <string name="private_forem_input_hint">Enter domain</string>
+  <string name="private_forem_input_placeholder">my-community.com</string>
+  <string name="next">Next</string>
+  <string name="error_missing_domain">Enter community domain</string>
+  <string name="error_invalid_url">Enter valid domain</string>
+  <string name="forems">Forems</string>
+  <string name="add_forem_by_domain">Add Forem by Domain</string>
+  <string name="my_list">My List</string>
+  <string name="explore">Explore</string>
+  <string name="select_picture">Select picture</string>
+  <string name="playback_channel_description">Podcast Player</string>
+  <string name="forem_already_available_in_list">Looks like the Forem is already in your list</string>
+  <string name="forem_passport">Forem Passport</string>
+  <string name="invalid_url">Invalid Url</string>
+  <string name="invalid_url_message">App cannot open this URL.</string>
+  <string name="exit">Exit</string>
+  <string name="notification_channel_id">FCM_NOTIFICATION</string>
+  <string name="network_not_reachable">Network not reachable</string>
+  <string name="error_all_forems_added">There are no more Forems here.\n\nIt seems like you\'ve already added all of our current suggestions.</string>
+  <string name="delete">Delete</string>
+  <string name="cancel">Cancel</string>
+  <string name="confirm_delete">Confirm Delete</string>
+  <string name="send_email_with">Send email with…</string>
+  <!-- Activity Labels -->
+  <string name="explore_activity_label">Explore</string>
+  <string name="home_activity_label">Home</string>
+  <string name="onboarding_activity_label">Onboarding</string>
+  <!-- Content Description -->
+  <string name="active_content_description">Active</string>
+  <string name="delete_forem_content_description">Delete %s Forem</string>
+  <string name="confirm_delete_forem_description">Do you want to delete %s forem?</string>
+  <string name="loading_data_content_description">Loading data</string>
+  <string name="back_content_description">Back</string>
+  <string name="forward_content_description">Forward</string>
+  <string name="my_forems_content_description">My Forems</string>
+  <string name="open_forem_passport_content_description">Open Forem Passport</string>
+</resources>

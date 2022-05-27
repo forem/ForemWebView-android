@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+
+    <import type="android.view.View" />
+
+    <variable
+      name="main"
+      type="com.forem.android.presentation.addforem.AddForemFragment" />
+
+    <variable
+      name="viewModel"
+      type="com.forem.android.presentation.addforem.AddForemViewModel" />
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background">
+
+    <View
+      android:id="@+id/top_view"
+      style="@style/Toolbar.Background"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+      android:id="@+id/back_image_view"
+      style="@style/Toolbar.BackArrow"
+      android:contentDescription="@string/navigate_up"
+      android:onClick="@{(v) -> main.onBackClicked()}"
+      app:layout_constraintBottom_toBottomOf="@id/top_view"
+      app:layout_constraintStart_toStartOf="@id/top_view"
+      app:layout_constraintTop_toTopOf="@id/top_view" />
+
+    <TextView
+      android:id="@+id/add_private_forem_text_view"
+      style="@style/Toolbar.Title"
+      android:text="@string/add_private_forem"
+      app:layout_constraintBottom_toBottomOf="@id/top_view"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/back_image_view"
+      app:layout_constraintTop_toTopOf="@id/top_view" />
+
+    <TextView
+      android:id="@+id/add_private_text_view_1"
+      style="@style/Subtitle1"
+      android:layout_width="@dimen/add_forem_content_max_width"
+      android:layout_marginStart="28dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="28dp"
+      android:text="@string/add_private_text_1"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/top_view" />
+
+    <TextView
+      android:id="@+id/add_private_text_view_2"
+      style="@style/Subtitle1"
+      android:layout_width="@dimen/add_forem_content_max_width"
+      android:layout_marginStart="28dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="28dp"
+      android:text="@string/add_private_text_2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/add_private_text_view_1" />
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/private_forem_text_input_layout"
+      style="@style/TextInputLayout"
+      android:layout_width="@dimen/add_forem_content_max_width"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="28dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="28dp"
+      android:hint="@string/private_forem_input_hint"
+      app:errorMessage="@{viewModel.addForemErrorMsg}"
+      app:hintTextColor="@color/primary_text_color"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/add_private_text_view_2"
+      app:placeholderText="@string/private_forem_input_placeholder">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/add_forem_text_input_edit_text"
+        style="@style/TextInputEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/epilogue_regular"
+        android:imeOptions="actionDone"
+        android:inputType="textWebEmailAddress"
+        android:singleLine="true"
+        android:textColor="@color/primary_text_color"
+        android:textColorHint="@color/primary_text_color"
+        android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+      android:id="@+id/next_button"
+      style="@style/PrimaryButton"
+      android:layout_width="@dimen/add_forem_content_max_width"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="12dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginBottom="12dp"
+      android:onClick="@{(v) -> viewModel.onNextButtonClicked()}"
+      android:text="@string/next"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+      android:id="@+id/loading_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:indeterminate="true"
+      android:visibility="@{viewModel.loadingViewVisibility ? View.VISIBLE : View.GONE, default=gone}"
+      app:indicatorColor="@color/forem_logo_color"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

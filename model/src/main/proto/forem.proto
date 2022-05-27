@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package model;
+
+option java_package = "com.forem.android.app.model";
+option java_multiple_files = true;
+
+// Corresponds to currently selected forem.
+message CurrentForem{
+  Forem forem = 1;
+}
+
+// Corresponds to the collection of forems.
+message ForemCollection {
+  // Maps forem home-page-url to forem.
+  map<string, Forem> forem = 1;
+}
+
+// Represent forem structure.
+message Forem {
+  // Name of the forem.
+  string name = 1;
+
+  // Logo of the forem.
+  string logo = 2;
+
+  // Home page url of the forem.
+  string homePageUrl = 3;
+}

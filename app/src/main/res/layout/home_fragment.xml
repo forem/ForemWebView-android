@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <data>
+
+    <import type="android.view.View" />
+
+    <variable
+      name="main"
+      type="com.forem.android.presentation.home.HomeFragment" />
+
+    <variable
+      name="viewModel"
+      type="com.forem.android.presentation.home.HomeFragmentViewModel" />
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/home_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background">
+
+    <FrameLayout
+      android:id="@+id/web_view_fragment"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:focusable="true"
+      android:importantForAccessibility="yes"
+      android:screenReaderFocusable="true"
+      app:layout_constraintBottom_toTopOf="@id/bottom_navigation_container"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:targetApi="p" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/bottom_navigation_container"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@color/home_bottom_navigation_background_color"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent">
+
+      <ImageView
+        android:id="@+id/back_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="@{viewModel.backButtonEnabled}"
+        android:contentDescription="@string/back_content_description"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:onClick="@{(v) -> main.onWebViewBackClicked()}"
+        android:padding="16dp"
+        android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@{viewModel.backButtonEnabled? @color/home_bottom_navigation_icon_color : @color/home_bottom_navigation_disabled_icon_color}" />
+
+      <ImageView
+        android:id="@+id/forward_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="@{viewModel.forwardButtonEnabled}"
+        android:contentDescription="@string/forward_content_description"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:onClick="@{(v) -> main.onWebViewForwardClicked()}"
+        android:padding="16dp"
+        android:src="@drawable/ic_baseline_arrow_forward_ios_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/back_image_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@{viewModel.forwardButtonEnabled? @color/home_bottom_navigation_icon_color : @color/home_bottom_navigation_disabled_icon_color}" />
+
+      <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="center_vertical|end"
+        android:onClick="@{(v) -> main.onForemNameClicked()}"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/forward_image_view"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+          android:id="@+id/forem_name_text_view"
+          style="@style/Subtitle1"
+          android:layout_width="0dp"
+          android:layout_marginEnd="4dp"
+          android:layout_weight="1"
+          android:ellipsize="end"
+          android:gravity="center_vertical|end"
+          android:maxLines="1"
+          android:minHeight="48dp"
+          android:text="@{viewModel.currentForem.name}" />
+
+        <ImageView
+          android:id="@+id/expand_image_view"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:importantForAccessibility="no"
+          android:src="@drawable/ic_baseline_unfold_more_24"
+          app:tint="@color/home_bottom_navigation_icon_color" />
+      </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

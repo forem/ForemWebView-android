@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+
+    <variable
+      name="viewModel"
+      type="com.forem.android.presentation.explore.RemoteForemItemViewModel" />
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/explore_forem_item_background_color"
+    android:onClick="@{(v) -> viewModel.onForemClicked()}"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+      android:id="@+id/forem_logo_image_view"
+      android:layout_width="@dimen/forem_logo_width"
+      android:layout_height="@dimen/forem_logo_height"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:importantForAccessibility="no"
+      android:src="@{viewModel.forem.logo}"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:shapeAppearanceOverlay="@style/RoundedShapeableImageView" />
+
+    <TextView
+      android:id="@+id/forem_name_text_view"
+      style="@style/Subtitle1"
+      android:layout_width="0dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:ellipsize="end"
+      android:maxLines="2"
+      android:text="@{viewModel.forem.name}"
+      app:layout_constraintBottom_toBottomOf="@id/forem_logo_image_view"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toEndOf="@id/forem_logo_image_view"
+      app:layout_constraintTop_toTopOf="@id/forem_logo_image_view" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

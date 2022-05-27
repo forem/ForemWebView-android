@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+
+    <import type="android.view.View" />
+
+    <variable
+      name="currentForem"
+      type="com.forem.android.app.model.Forem" />
+
+    <variable
+      name="viewModel"
+      type="com.forem.android.presentation.explore.LocalForemItemViewModel" />
+  </data>
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/explore_forem_item_background_color">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/background_constraint_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/local_forem_delete_background">
+
+      <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:padding="12dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_baseline_delete_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/foreground_constraint_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/explore_forem_item_background_color"
+      android:onClick="@{(v) -> viewModel.onForemClicked()}"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp">
+
+      <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/forem_logo_image_view"
+        android:layout_width="@dimen/forem_logo_width"
+        android:layout_height="@dimen/forem_logo_height"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:importantForAccessibility="no"
+        android:src="@{viewModel.forem.logo}"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundedShapeableImageView" />
+
+      <TextView
+        android:id="@+id/forem_name_text_view"
+        style="@style/Subtitle1"
+        android:layout_width="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="@{viewModel.forem.name}"
+        app:layout_constraintBottom_toBottomOf="@id/forem_logo_image_view"
+        app:layout_constraintEnd_toStartOf="@id/selected_forem_image_view"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/forem_logo_image_view"
+        app:layout_constraintTop_toTopOf="@id/forem_logo_image_view" />
+
+      <ImageView
+        android:id="@+id/selected_forem_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:contentDescription="@string/active_content_description"
+        android:src="@drawable/ic_baseline_check_24"
+        android:visibility="@{currentForem.name.matches(viewModel.forem.name) ? View.VISIBLE : View.GONE, default=gone}"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/delete_forem_image_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/explore_local_forem_selected_tick_color" />
+
+      <ImageView
+        android:id="@+id/delete_forem_image_view"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@{String.format(@string/delete_forem_content_description, viewModel.forem.name)}"
+        android:onClick="@{(v) -> viewModel.onDeleteForemClicked()}"
+        android:padding="12dp"
+        android:src="@drawable/ic_baseline_delete_24"
+        android:visibility="@{viewModel.accessibilityEnabled ? View.VISIBLE : View.GONE, default=gone}"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/error_red_color" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </FrameLayout>
+</layout>

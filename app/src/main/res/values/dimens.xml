@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="forem_logo_width">56dp</dimen>
+  <dimen name="forem_logo_height">56dp</dimen>
+  <dimen name="forem_logo_small_width">32dp</dimen>
+  <dimen name="forem_logo_small_height">32dp</dimen>
+  <dimen name="splash_activity_logo_width">196dp</dimen>
+  <dimen name="splash_activity_logo_height">196dp</dimen>
+  <dimen name="common_padding_bottom">96dp</dimen>
+  <dimen name="onboarding_content_max_width">0dp</dimen>
+  <dimen name="add_forem_content_max_width">0dp</dimen>
+  <dimen name="explore_fragment_content_max_width">0dp</dimen>
+</resources>
