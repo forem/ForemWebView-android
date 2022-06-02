@@ -16,10 +16,10 @@ android {
         minSdk 21
         targetSdk 31
         versionCode 2
-        versionName "1.0.1"
+        versionName "1.0.0"
 
         buildConfigField("String", "ANDROID_BRIDGE", "\"AndroidBridge\"")
-        buildConfigField("String", "FOREM_AGENT_EXTENSION", "\"ForemWebView/1.0.1\"")
+        buildConfigField("String", "FOREM_AGENT_EXTENSION", "\"ForemWebView/1.0.0\"")
         buildConfigField("String", "PASSPORT_AGENT_EXTENSION", "\"ForemWebView/passport\"")
     }
     buildTypes {
@@ -80,7 +80,7 @@ afterEvaluate {
 
                 groupId = 'com.github.forem'
                 artifactId = 'ForemWebView-android'
-                version = '1.0.1'
+                version = '1.0.0'
             }
         }
     }
