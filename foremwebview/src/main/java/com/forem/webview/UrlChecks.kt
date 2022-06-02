@@ -6,6 +6,7 @@ import android.util.Patterns
 import java.net.MalformedURLException
 import java.net.URISyntaxException
 import java.net.URL
+import java.util.Locale
 
 object UrlChecks {
     private val overrideUrlList = listOf(
@@ -28,13 +29,13 @@ object UrlChecks {
         //  the result is THIRD_PARTY_LINK but instead is should be HOST_LINK.
         return if (checkUrlIsCorrect(url)) {
             when {
-                URL(url).host.toLowerCase().contains(host.toLowerCase()) -> {
+                URL(url).host.lowercase(Locale.getDefault()).contains(host.lowercase(Locale.getDefault())) -> {
                     UrlType.HOST_LINK
                 }
-                overrideUrlList.any { url.toLowerCase().contains(it.toLowerCase()) } -> {
+                overrideUrlList.any { url.lowercase(Locale.getDefault()).contains(it.lowercase(Locale.getDefault())) } -> {
                     UrlType.OVERRIDE_LINK
                 }
-                oauthUrlList.any { url.toLowerCase().startsWith(it.toLowerCase()) } -> {
+                oauthUrlList.any { url.lowercase(Locale.getDefault()).startsWith(it.lowercase(Locale.getDefault())) } -> {
                     UrlType.OAUTH_LINK
                 }
                 else -> {
@@ -42,7 +43,7 @@ object UrlChecks {
                 }
             }
         } else {
-            if (url.toLowerCase().startsWith("mailto:")) {
+            if (url.lowercase(Locale.getDefault()).startsWith("mailto:")) {
                 UrlType.EMAIL_LINK
             } else {
                 UrlType.THIRD_PARTY_LINK

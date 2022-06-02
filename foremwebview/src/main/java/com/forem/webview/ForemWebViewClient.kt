@@ -15,6 +15,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONObject
 import java.net.URL
+import java.util.Locale
 
 @SuppressLint("DefaultLocale")
 class ForemWebViewClient(
@@ -162,7 +163,7 @@ class ForemWebViewClient(
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val host = Uri.parse(baseUrl).host
-        val url = request!!.url.toString().toLowerCase()
+        val url = request!!.url.toString().lowercase(Locale.getDefault())
 
         // If sign-out, clear all data.
         if (view?.originalUrl == "$baseUrl/signout_confirm") {
