@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,14 +18,10 @@ import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
-import androidx.lifecycle.ViewModelProvider
-import com.forem.webview.databinding.WebViewFragmentBinding
-import dagger.hilt.android.AndroidEntryPoint
 import java.net.URL
 import javax.inject.Inject
 
 /** Displays forem in fragment. */
-@AndroidEntryPoint
 class WebViewFragment : Fragment(), FileChooserListener {
 
     companion object {
@@ -48,19 +45,19 @@ class WebViewFragment : Fragment(), FileChooserListener {
         }
     }
 
-    @Inject
     lateinit var foremWebViewSession: ForemWebViewSession
 
     private lateinit var resultListenerKey: String
-
-    private lateinit var binding: WebViewFragmentBinding
-    private lateinit var viewModel: WebViewFragmentViewModel
 
     private lateinit var webViewBridge: AndroidWebViewBridge
     private lateinit var webViewClient: ForemWebViewClient
     private var filePathCallback: ValueCallback<Array<Uri>>? = null
 
+    private var baseUrl = ""
+
+    private var oauthWebViewContainer: FrameLayout? = null
     private var oauthWebView: WebView? = null
+    private var webView: WebView? = null
 
     private val imagePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -79,64 +76,70 @@ class WebViewFragment : Fragment(), FileChooserListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val view = inflater.inflate(R.layout.web_view_fragment, container, false)
+
+        webView = view.findViewById(R.id.web_view)
+        oauthWebViewContainer = view.findViewById(R.id.oauth_web_view_container)
+
         val args = requireArguments()
-        val baseUrl = args.getString(URL_ARGUMENT_KEY)!!
+        baseUrl = args.getString(URL_ARGUMENT_KEY)!!
         val needsForemMetaData = args.getBoolean(NEEDS_FOREM_META_DATA)
         resultListenerKey = args.getString(RESULT_LISTENER_KEY)!!
 
-        viewModel = ViewModelProvider(this).get(WebViewFragmentViewModel::class.java)
-        viewModel.baseUrl.set(baseUrl)
-
-        binding = WebViewFragmentBinding.inflate(inflater, container, /* attachToRoot= */ false)
-        binding.viewModel = viewModel
-
         setupWebView(baseUrl, needsForemMetaData)
 
-        return binding.root
+        return view
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(baseUrl: String, needsForemMetaData: Boolean) {
+
+        Log.d("TAG","setupWebView: $baseUrl")
         // User Agent
-        val defaultUserAgent = binding.webView.settings.userAgentString
+        val defaultUserAgent = webView!!.settings.userAgentString
         val extensionUserAgent = if (baseUrl != WebViewConstants.PASSPORT_URL)
             BuildConfig.FOREM_AGENT_EXTENSION
         else
             BuildConfig.PASSPORT_AGENT_EXTENSION
 
-        // WebView Settings
-        webViewSettings(binding.webView)
-        binding.webView.settings.userAgentString = "$defaultUserAgent $extensionUserAgent"
+        webView!!.loadUrl(baseUrl)
 
-        // Javascript Interface
-        webViewBridge = AndroidWebViewBridge(this.requireActivity())
-        foremWebViewSession.androidWebViewBridge = webViewBridge
-        binding.webView.addJavascriptInterface(webViewBridge, BuildConfig.ANDROID_BRIDGE)
+        // WebView Settings
+        webViewSettings(webView!!)
+        webView!!.settings.userAgentString = "$defaultUserAgent $extensionUserAgent"
 
         // WebView Client
         webViewClient = ForemWebViewClient(
             activity = this.activity,
-            webView = binding.webView,
+            webView = webView!!,
             oauthWebView = oauthWebView,
-            originalUrl = viewModel.baseUrl.get()!!,
+            originalUrl = baseUrl,
             needsForemMetaData = needsForemMetaData,
             updateForemData = { foremUrl, title, logo ->
                 sendForemMetaDataToFragmentResultListener(
                     foremUrl, title, logo
                 )
             },
-            onPageFinish = { viewModel.loadingViewVisibility.set(false) },
+            onPageFinish = {
+                // Maybe hide loading screen here
+            },
             loadOauthWebView = { url -> loadOauthWebView(url) },
             destroyOauthWebView = { destroyOauthWebView() },
             canGoBackOrForward = { canGoBackStatus, canGoForwardStatus ->
                 canGoBackOrForward(canGoBackStatus, canGoForwardStatus)
             }
         )
-        binding.webView.webViewClient = webViewClient
-        webViewBridge.webViewClient = webViewClient
+        webView!!.webViewClient = webViewClient
+
+        // Javascript Interface
+        webViewBridge = AndroidWebViewBridge(this.requireActivity(), webViewClient)
+        webView!!.addJavascriptInterface(webViewBridge, BuildConfig.ANDROID_BRIDGE)
+
+        foremWebViewSession = ForemWebViewSession().getInstance()!!
+        foremWebViewSession.androidWebViewBridge = webViewBridge
 
         // WebView Chrome Client
-        binding.webView.webChromeClient = ForemWebChromeClient(fileChooserListener = this)
+        webView!!.webChromeClient = ForemWebChromeClient(fileChooserListener = this)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -144,20 +147,20 @@ class WebViewFragment : Fragment(), FileChooserListener {
         if (oauthWebView == null) {
             createNewOauthWebViewInstance()
         }
-        binding.webView.visibility = View.GONE
+        webView!!.visibility = View.GONE
 
-        binding.oauthWebViewContainer.visibility = View.VISIBLE
+        oauthWebViewContainer!!.visibility = View.VISIBLE
         oauthWebView?.loadUrl(oauthUrl)
     }
 
     private fun createNewOauthWebViewInstance() {
         oauthWebView = WebView(this.requireContext())
-        binding.oauthWebViewContainer.layoutParams = FrameLayout.LayoutParams(
+        oauthWebViewContainer!!.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
         )
 
-        binding.oauthWebViewContainer.addView(oauthWebView)
+        oauthWebViewContainer!!.addView(oauthWebView)
 
         // WebView Settings
         webViewSettings(oauthWebView!!)
@@ -180,7 +183,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
                 val url = request!!.url.toString()
                 val urlType = UrlChecks.getURLType(
                     url = url,
-                    host = URL(viewModel.baseUrl.get()).host.toString()
+                    host = URL(baseUrl).host.toString()
                 )
                 return when (urlType) {
                     UrlType.OAUTH_LINK -> {
@@ -189,7 +192,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
                     }
                     else -> {
                         // Open this url in webView.
-                        binding.webView.loadUrl(url)
+                        webView!!.loadUrl(url)
                         destroyOauthWebView()
                         false
                     }
@@ -199,11 +202,11 @@ class WebViewFragment : Fragment(), FileChooserListener {
     }
 
     private fun destroyOauthWebView() {
-        binding.oauthWebViewContainer.removeAllViews()
-        binding.oauthWebViewContainer.visibility = View.GONE
+        oauthWebViewContainer!!.removeAllViews()
+        oauthWebViewContainer!!.visibility = View.GONE
         oauthWebView = null
 
-        binding.webView.visibility = View.VISIBLE
+        webView!!.visibility = View.VISIBLE
     }
 
     private fun canGoBackOrForward(canGoBack: Boolean, canGoForward: Boolean) {
@@ -249,26 +252,26 @@ class WebViewFragment : Fragment(), FileChooserListener {
      * Along with this the function also takes care of webView and oauthWebView navigation.
      */
     private fun centrallyHandleBackNavigation(canExitApp: Boolean) {
-        if (oauthWebView != null && binding.oauthWebViewContainer.visibility == View.GONE) {
+        if (oauthWebView != null && oauthWebViewContainer!!.visibility == View.GONE) {
             // Edge Case: Ideally this case should never arise.
             destroyOauthWebView()
-            if (binding.webView.canGoBack()) {
-                binding.webView.goBack()
+            if (webView!!.canGoBack()) {
+                webView!!.goBack()
             } else {
                 if (canExitApp) {
                     handleHomePageReached()
                 }
             }
-        } else if (oauthWebView != null && binding.oauthWebViewContainer.visibility == View.VISIBLE) {
+        } else if (oauthWebView != null && oauthWebViewContainer!!.visibility == View.VISIBLE) {
             // Case where oauthWebView is active.
             if (oauthWebView!!.canGoBack()) {
                 oauthWebView?.goBack()
             } else {
                 destroyOauthWebView()
             }
-        } else if (oauthWebView == null && binding.webView.canGoBack()) {
+        } else if (oauthWebView == null && webView!!.canGoBack()) {
             // Case where oauthWebView is fully inactive.
-            binding.webView.goBack()
+            webView!!.goBack()
         } else {
             if (canExitApp) {
                 handleHomePageReached()
@@ -289,21 +292,21 @@ class WebViewFragment : Fragment(), FileChooserListener {
     }
 
     fun navigateForward() {
-        if (binding.webView.canGoForward()) {
-            binding.webView.goForward()
+        if (webView!!.canGoForward()) {
+            webView!!.goForward()
         }
     }
 
     fun updateForemInstance(baseUrl: String) {
-        if (::webViewClient.isInitialized && ::viewModel.isInitialized) {
+        if (::webViewClient.isInitialized) {
             webViewClient.clearHistory()
-            viewModel.baseUrl.set(baseUrl)
+            this.baseUrl = baseUrl
             webViewClient.setBaseUrl(baseUrl)
         }
     }
 
     fun refresh() {
-        binding.webView.reload()
+        webView!!.reload()
     }
 
     private fun sendDataToFragmentResultListener(

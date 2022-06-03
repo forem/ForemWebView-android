@@ -1,12 +1,21 @@
 package com.forem.webview
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
-@Singleton
-class ForemWebViewSession @Inject constructor() {
+class ForemWebViewSession {
 
     lateinit var androidWebViewBridge: AndroidWebViewBridge
+
+    private var instance: ForemWebViewSession? = null
+
+    fun getInstance(): ForemWebViewSession? {
+        if (instance == null) {
+            synchronized(ForemWebViewSession::class.java) {
+                if (instance == null) {
+                    instance = ForemWebViewSession()
+                }
+            }
+        }
+        return instance
+    }
 
     fun videoPlayerPaused() {
         androidWebViewBridge.videoPlayerPaused()

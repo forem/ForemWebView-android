@@ -1,2 +1,2 @@
-include ':foremwebview'
+include ':app', ':foremwebview'
 rootProject.name = "ForemWebView-android"

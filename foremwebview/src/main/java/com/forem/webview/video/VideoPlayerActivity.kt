@@ -5,22 +5,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import com.forem.webview.ForemWebViewSession
 import com.forem.webview.R
-import com.forem.webview.databinding.VideoPlayerActivityBinding
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import dagger.hilt.android.AndroidEntryPoint
-import java.util.Timer
-import java.util.TimerTask
-import javax.inject.Inject
+import java.util.*
 
 /** Activity which displays video using [ExoPlayer]. */
-@AndroidEntryPoint
 class VideoPlayerActivity : AppCompatActivity(), Player.EventListener {
 
     // TODO(#37): Implement picture-in-picture
@@ -37,19 +32,24 @@ class VideoPlayerActivity : AppCompatActivity(), Player.EventListener {
         }
     }
 
-    private lateinit var binding: VideoPlayerActivityBinding
     private lateinit var player: SimpleExoPlayer
     private val timer = Timer()
 
-    @Inject
     lateinit var foremWebViewSession: ForemWebViewSession
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(
-            this,
-            R.layout.video_player_activity
-        )
+
+        setContentView(R.layout.video_player_activity)
+
+        if (ForemWebViewSession().getInstance() == null) {
+            finish()
+            return
+        } else {
+            foremWebViewSession = ForemWebViewSession().getInstance()!!
+        }
+
+        val playerView = findViewById<PlayerView>(R.id.player_view)
 
         val url = intent.getStringExtra(VIDEO_URL_INTENT_EXTRA)
         val time = intent.getStringExtra(VIDEO_TIME_INTENT_EXTRA)
@@ -60,7 +60,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.EventListener {
         val mediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(streamUri)
 
         player = SimpleExoPlayer.Builder(this).build()
-        binding.playerView.player = player
+        playerView.player = player
         player.prepare(mediaSource)
         player.seekTo(time!!.toLong() * 1000)
         player.playWhenReady = true

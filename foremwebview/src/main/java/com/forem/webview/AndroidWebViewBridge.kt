@@ -15,12 +15,13 @@ import com.forem.webview.media.AudioService
 import com.forem.webview.video.VideoPlayerActivity
 import com.google.gson.Gson
 import org.json.JSONObject
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 
-class AndroidWebViewBridge(private val context: Activity) {
+class AndroidWebViewBridge(
+    private val context: Activity,
+    private val webViewClient: ForemWebViewClient
+) {
 
-    lateinit var webViewClient: ForemWebViewClient
     private var timer: Timer? = null
 
     // AudioService is initialized when onServiceConnected is executed after/during binding is done.
