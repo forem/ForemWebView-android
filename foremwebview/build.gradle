@@ -65,16 +65,16 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:22.0.0")
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-
-                groupId = 'com.github.forem'
-                artifactId = 'ForemWebView-android'
-                version = '1.0.0'
-            }
-        }
-    }
-}
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            release(MavenPublication) {
+//                from components.release
+//
+//                groupId = 'com.github.forem'
+//                artifactId = 'ForemWebView-android'
+//                version = '1.0.0'
+//            }
+//        }
+//    }
+//}
