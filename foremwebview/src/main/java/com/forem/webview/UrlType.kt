@@ -1,6 +1,6 @@
 package com.forem.webview
 
-enum class UrlType {
+public enum class UrlType {
     /** Links which are part of a particular forem. */
     HOST_LINK,
     /** Links which needs to be overridden to load in same webView. */

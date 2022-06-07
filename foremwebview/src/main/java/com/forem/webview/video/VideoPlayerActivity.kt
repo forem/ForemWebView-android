@@ -16,7 +16,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import java.util.*
 
 /** Activity which displays video using [ExoPlayer]. */
-class VideoPlayerActivity : AppCompatActivity(), Player.EventListener {
+public class VideoPlayerActivity : AppCompatActivity(), Player.EventListener {
 
     // TODO(#37): Implement picture-in-picture
     // TODO(#176): Transition from portrait to landscape results in video restart.

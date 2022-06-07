@@ -1,6 +1,6 @@
 package com.forem.webview
 
-object WebViewConstants {
+public object WebViewConstants {
     const val FOREM_META_DATA_RESULT_LISTENER_KEY = "ForemMetaData.resultListener"
     const val FOREM_META_DATA_URL_KEY = "ForemMetaData.url"
     const val FOREM_META_DATA_TITLE_KEY = "ForemMetaData.title"

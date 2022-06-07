@@ -5,7 +5,7 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 
-class ForemWebChromeClient(
+public class ForemWebChromeClient(
     private val fileChooserListener: FileChooserListener
 ) : WebChromeClient() {
 

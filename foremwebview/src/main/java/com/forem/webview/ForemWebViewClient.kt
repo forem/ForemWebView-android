@@ -18,7 +18,7 @@ import java.net.URL
 import java.util.Locale
 
 @SuppressLint("DefaultLocale")
-class ForemWebViewClient(
+public class ForemWebViewClient(
     private val activity: Activity?,
     private val webView: WebView,
     private val oauthWebView: WebView?,

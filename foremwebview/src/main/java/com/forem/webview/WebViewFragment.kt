@@ -22,7 +22,7 @@ import java.net.URL
 import javax.inject.Inject
 
 /** Displays forem in fragment. */
-class WebViewFragment : Fragment(), FileChooserListener {
+public class WebViewFragment : Fragment(), FileChooserListener {
 
     companion object {
         private const val RESULT_LISTENER_KEY = "WebViewFragment.resultListener"

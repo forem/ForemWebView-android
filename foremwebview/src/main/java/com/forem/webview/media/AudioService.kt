@@ -27,7 +27,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 
-class AudioService : LifecycleService() {
+public class AudioService : LifecycleService() {
     private val binder = AudioServiceBinder()
 
     private var currentPodcastUrl: String? = null

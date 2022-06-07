@@ -1,6 +1,6 @@
 package com.forem.webview
 
-class ForemWebViewSession {
+public class ForemWebViewSession {
 
     lateinit var androidWebViewBridge: AndroidWebViewBridge
 
