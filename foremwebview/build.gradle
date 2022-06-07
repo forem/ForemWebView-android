@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
     id 'maven-publish'
 }
 
@@ -16,10 +16,12 @@ android {
         buildConfigField("String", "ANDROID_BRIDGE", "\"AndroidBridge\"")
         buildConfigField("String", "FOREM_AGENT_EXTENSION", "\"ForemWebView/1.0.0\"")
         buildConfigField("String", "PASSPORT_AGENT_EXTENSION", "\"ForemWebView/passport\"")
+
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
