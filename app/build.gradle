@@ -42,4 +42,5 @@ dependencies {
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
   implementation(project(":foremwebview"))
+  // implementation 'com.github.forem:ForemWebView-android:1.0.0'
 }
