@@ -18,6 +18,7 @@ import androidx.lifecycle.LifecycleService
 import com.forem.webview.BuildConfig
 import com.forem.webview.R
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -27,7 +28,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 
-public class AudioService : LifecycleService() {
+class AudioService : LifecycleService() {
     private val binder = AudioServiceBinder()
 
     private var currentPodcastUrl: String? = null
@@ -268,7 +269,7 @@ public class AudioService : LifecycleService() {
         val dataSourceFactory = DefaultDataSourceFactory(this, BuildConfig.FOREM_AGENT_EXTENSION)
         val streamUri = Uri.parse(currentPodcastUrl)
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
-            .createMediaSource(streamUri)
+            .createMediaSource(MediaItem.fromUri(streamUri))
         player?.prepare(mediaSource)
     }
 }

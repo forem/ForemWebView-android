@@ -9,7 +9,7 @@ import com.google.android.exoplayer2.util.NotificationUtil
  * This subclass of PlayerNotificationManager customizes the controls available in the
  * notification by overriding the getActions method.
  */
-public class PodcastPlayerNotificationManager(
+class PodcastPlayerNotificationManager(
     context: Context,
     channelId: String,
     notificationId: Int,

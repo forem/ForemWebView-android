@@ -19,10 +19,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import java.net.URL
-import javax.inject.Inject
 
 /** Displays forem in fragment. */
-public class WebViewFragment : Fragment(), FileChooserListener {
+class WebViewFragment : Fragment(), FileChooserListener {
 
     companion object {
         private const val RESULT_LISTENER_KEY = "WebViewFragment.resultListener"
@@ -303,10 +302,6 @@ public class WebViewFragment : Fragment(), FileChooserListener {
             this.baseUrl = baseUrl
             webViewClient.setBaseUrl(baseUrl)
         }
-    }
-
-    fun refresh() {
-        webView!!.reload()
     }
 
     private fun sendDataToFragmentResultListener(

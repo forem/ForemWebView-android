@@ -35,34 +35,28 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.3.1")
-
-    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("com.google.android.material:material:1.4.0")
-
-    implementation("androidx.fragment:fragment-ktx:1.3.6")
+    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.fragment:fragment-ktx:1.4.1")
 
     // WebView
-    implementation("androidx.browser:browser:1.3.0")
+    implementation("androidx.browser:browser:1.4.0")
 
     // Lifecycle
-    implementation("androidx.lifecycle:lifecycle-common-java8:2.2.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
     // Exoplayer
-    implementation("com.google.android.exoplayer:exoplayer-core:2.15.1")
-    implementation("com.google.android.exoplayer:exoplayer-hls:2.15.1")
-    implementation("com.google.android.exoplayer:extension-mediasession:2.15.1")
-    implementation("com.google.android.exoplayer:exoplayer-ui:2.15.1")
+    implementation("com.google.android.exoplayer:exoplayer-core:2.17.1")
+    implementation("com.google.android.exoplayer:exoplayer-hls:2.17.1")
+    implementation("com.google.android.exoplayer:extension-mediasession:2.17.1")
+    implementation("com.google.android.exoplayer:exoplayer-ui:2.17.1")
 
     // Gson
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     // Push notifications - FCM
-    implementation("com.google.firebase:firebase-analytics:19.0.2")
-    implementation("com.google.firebase:firebase-messaging:22.0.0")
+    implementation("com.google.firebase:firebase-analytics:21.0.0")
+    implementation("com.google.firebase:firebase-messaging:23.0.5")
 }
 
 afterEvaluate {
@@ -73,7 +67,7 @@ afterEvaluate {
 
                 groupId = 'com.github.forem'
                 artifactId = 'ForemWebView-android'
-                version = '1.0.4'
+                version = '1.0.0'
             }
         }
     }

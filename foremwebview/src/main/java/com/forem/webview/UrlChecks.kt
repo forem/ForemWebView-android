@@ -8,7 +8,7 @@ import java.net.URISyntaxException
 import java.net.URL
 import java.util.Locale
 
-public object UrlChecks {
+object UrlChecks {
     private val overrideUrlList = listOf(
         "account.forem.com",
         "api.twitter.com/oauth",

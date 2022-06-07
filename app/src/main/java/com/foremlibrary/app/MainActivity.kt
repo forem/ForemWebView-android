@@ -1,19 +1,42 @@
 package com.foremlibrary.app
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.forem.webview.WebViewConstants
 import com.forem.webview.WebViewFragment
 
 private const val WEB_VIEW_FRAGMENT_RESULT_LISTENER_KEY =
     "MainActivity.WebViewFragment.resultListener"
 
+private const val DEV_TO = "https://dev.to"
+private const val MMA_LIFE = "https://www.thismmalife.com/"
+
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var backImageView: ImageView
+    private lateinit var forwardImageView: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        loadOrUpdateFragment("https://dev.to")
+        loadOrUpdateFragment(DEV_TO)
+
+        backImageView = findViewById(R.id.back_image_view)
+        forwardImageView = findViewById(R.id.forward_image_view)
+
+        backImageView.setOnClickListener {
+            onWebViewBackClicked()
+        }
+
+        forwardImageView.setOnClickListener {
+            onWebViewForwardClicked()
+        }
+    }
+
+    override fun onBackPressed() {
+        getWebViewFragment()?.onBackPressedFragment()
     }
 
     private fun loadOrUpdateFragment(url: String) {
@@ -26,12 +49,12 @@ class MainActivity : AppCompatActivity() {
                 val canGoForward = bundle.getBoolean(WebViewConstants.WEB_VIEW_CAN_GO_FORWARD_KEY)
                 val homeReached = bundle.getBoolean(WebViewConstants.WEB_VIEW_HOME_REACHED_KEY)
 
-//                if (homeReached) {
-//                    sendDataToFragmentResultListener(webViewNavigation = WebViewNavigation.HOME_REACHED)
-//                } else {
-//                    viewModel.backButtonEnabled.set(canGoBack)
-//                    viewModel.forwardButtonEnabled.set(canGoForward)
-//                }
+                if (homeReached) {
+                    onWebPageHomeReached()
+                } else {
+                    backImageView.isEnabled = canGoBack
+                    forwardImageView.isEnabled = canGoForward
+                }
             }
 
             val webViewFragment = WebViewFragment.newInstance(
@@ -52,5 +75,18 @@ class MainActivity : AppCompatActivity() {
         return this.supportFragmentManager.findFragmentById(
             R.id.web_view_fragment
         ) as WebViewFragment?
+    }
+
+    private fun onWebViewBackClicked() {
+        getWebViewFragment()?.navigateBack()
+    }
+
+    private fun onWebViewForwardClicked() {
+        getWebViewFragment()?.navigateForward()
+    }
+
+    private fun onWebPageHomeReached() {
+        finish()
+        return
     }
 }

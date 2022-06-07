@@ -17,7 +17,7 @@ import com.google.gson.Gson
 import org.json.JSONObject
 import java.util.*
 
-public class AndroidWebViewBridge(
+class AndroidWebViewBridge(
     private val context: Activity,
     private val webViewClient: ForemWebViewClient
 ) {
