@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,7 +92,6 @@ class WebViewFragment : Fragment(), FileChooserListener {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(baseUrl: String, needsForemMetaData: Boolean) {
 
-        Log.d("TAG","setupWebView: $baseUrl")
         // User Agent
         val defaultUserAgent = webView!!.settings.userAgentString
         val extensionUserAgent = if (baseUrl != WebViewConstants.PASSPORT_URL)

@@ -42,11 +42,12 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
 
         setContentView(R.layout.video_player_activity)
 
-        if (ForemWebViewSession().getInstance() == null) {
+        val foremWebViewSessionInstance = ForemWebViewSession().getInstance()
+        if (foremWebViewSessionInstance == null) {
             finish()
             return
         } else {
-            foremWebViewSession = ForemWebViewSession().getInstance()!!
+            foremWebViewSession = foremWebViewSessionInstance
         }
 
         val playerView = findViewById<PlayerView>(R.id.player_view)
@@ -55,9 +56,8 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         val time = intent.getStringExtra(VIDEO_TIME_INTENT_EXTRA)
 
         val streamUri = Uri.parse(url)
-//        val dataSourceFactory: DataSource.Factory =
-//            DefaultHttpDataSourceFactory("DEV-Native-android")
-        val mediaSource = HlsMediaSource.Factory(DefaultHttpDataSource.Factory()).createMediaSource(MediaItem.fromUri(streamUri))
+        val mediaSource = HlsMediaSource.Factory(DefaultHttpDataSource.Factory())
+            .createMediaSource(MediaItem.fromUri(streamUri))
 
         player = SimpleExoPlayer.Builder(this).build()
         playerView.player = player
