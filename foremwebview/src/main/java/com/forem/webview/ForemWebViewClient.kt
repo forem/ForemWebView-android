@@ -17,6 +17,10 @@ import org.json.JSONObject
 import java.net.URL
 import java.util.Locale
 
+/**
+ * Class which extends WebViewClient to override all functions and implement custom functionalities
+ * within the WebView.
+ */
 @SuppressLint("DefaultLocale")
 class ForemWebViewClient(
     private val activity: Activity?,
@@ -37,6 +41,11 @@ class ForemWebViewClient(
         setBaseUrl(originalUrl)
     }
 
+    /**
+     * Sets the base url.
+     *
+     * @param baseUrl is the url which is basically the host.
+     */
     fun setBaseUrl(baseUrl: String) {
         this.baseUrl = baseUrl
     }
@@ -47,6 +56,12 @@ class ForemWebViewClient(
 
     private var token: String? = null
 
+    /**
+     * Function called via [AndroidWebViewBridge] when it successfully fetches the meta data of
+     * forem instance.
+     *
+     * @param foremMetaDataMap is a map of forem related meta data.
+     */
     fun foremMetaDataReceived(foremMetaDataMap: Map<String, String>) {
         if (UrlChecks.checkUrlIsCorrect(baseUrl)) {
             val host = URL(baseUrl).host
@@ -59,15 +74,27 @@ class ForemWebViewClient(
         }
     }
 
+    /**
+     * Function which gets called when user is logged-in successfully.
+     *
+     * @param userId unique user if associated with current user.
+     */
     fun userLoggedIn(userId: Int) {
         this.userId = userId
         generateFirebaseToken()
     }
 
+    /**
+     * Gets called when user logs-out of the website.
+     */
     fun userLoggedOut() {
         unregisterDevice()
     }
 
+    /**
+     * Function to set the clearHistory boolean to true.
+     * @param
+     */
     fun clearHistory() {
         clearHistory = true
     }
@@ -232,6 +259,13 @@ class ForemWebViewClient(
         }
     }
 
+    /**
+     * This function gets called from [AndroidWebViewBridge] whenever some information needs to be
+     * sent to the website from the android device.
+     *
+     * @param type can be either podcast of video.
+     * @param message contains the information along with actions which needs to be sent.
+     */
     fun sendBridgeMessage(type: BridgeMessageType, message: Map<String, Any>) {
         val payload = mutableMapOf<String, Any>()
         payload.putAll(message)

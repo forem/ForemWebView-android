@@ -8,6 +8,7 @@ import java.net.URISyntaxException
 import java.net.URL
 import java.util.Locale
 
+/** Helper object which checks different urls with helper functions. */
 object UrlChecks {
     private val overrideUrlList = listOf(
         "account.forem.com",
@@ -23,6 +24,13 @@ object UrlChecks {
         "https://accounts.google.co.in"
     )
 
+    /**
+     * Function which determines the url type w.r.t. to host url.
+     *
+     * @param url which will get compared with the host.
+     * @param host is the main url for comparison.
+     * @return an emum described within from [UrlType]
+     */
     @SuppressLint("DefaultLocale")
     fun getURLType(url: String, host: String): UrlType {
         // TODO(#178): Special case- if URL is is https://m.facebook.com/ and host is www.facebook.com
@@ -51,6 +59,12 @@ object UrlChecks {
         }
     }
 
+    /**
+     * Checks if text is correct valid url or not.
+     * @param url which needs to be checked.
+     * @throws MalformedURLException or URISyntaxException or Exception if url is not valid.
+     * @return true if its a valid url.
+     */
     fun checkUrlIsCorrect(url: String): Boolean {
         return try {
             val checkURL = URL(url)
@@ -65,6 +79,14 @@ object UrlChecks {
         }
     }
 
+    /**
+     * Checks if the url is valid and then append/adjust to https:// prefix
+     *
+     * @param url which needs to be corrected.
+     * @return a valid https url
+     *
+     * @sample: if url is "http://example.com" it will return "https://example.com"
+     */
     fun checkAndAppendHttpsToUrl(url: String): String {
         return if (url.isValidUrl()) {
             when {

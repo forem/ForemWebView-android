@@ -15,15 +15,23 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import java.util.*
 
-/** Activity which displays video using [ExoPlayer]. */
+/** Activity which displays video using [ExoPlayer] on top of [WebViewFragment]. */
 class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
 
     // TODO(#37): Implement picture-in-picture
     // TODO(#176): Transition from portrait to landscape results in video restart.
     companion object {
-        const val VIDEO_URL_INTENT_EXTRA = "VideoPlayerActivity.video_url"
-        const val VIDEO_TIME_INTENT_EXTRA = "VideoPlayerActivity.video_time"
+        private const val VIDEO_URL_INTENT_EXTRA = "VideoPlayerActivity.video_url"
+        private const val VIDEO_TIME_INTENT_EXTRA = "VideoPlayerActivity.video_time"
 
+        /**
+         * Creates a new instance of intent for [VideoPlayerActivity].
+         *
+         * @param content the source activity context.
+         * @param url the video which needs to be played.
+         * @param time the time at video the video should start from.
+         * @return the intent for [VideoPlayerActivity] with extras.
+         */
         fun newInstance(context: Context, url: String, time: String): Intent {
             val intent = Intent(context, VideoPlayerActivity::class.java)
             intent.putExtra(VIDEO_URL_INTENT_EXTRA, url)
@@ -35,7 +43,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
     private lateinit var player: SimpleExoPlayer
     private val timer = Timer()
 
-    lateinit var foremWebViewSession: ForemWebViewSession
+    private lateinit var foremWebViewSession: ForemWebViewSession
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +85,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         super.onDestroy()
     }
 
-    fun timeUpdate() {
+    private fun timeUpdate() {
         if (::player.isInitialized) {
             val milliseconds = player.currentPosition
             val currentTime = (milliseconds / 1000).toString()
@@ -85,6 +93,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    /** Helper timer class which updates the status of video player continuously on backend. */
     inner class TimerUpdate : TimerTask() {
         override fun run() {
             runOnUiThread {

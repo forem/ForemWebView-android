@@ -17,6 +17,7 @@ import com.google.gson.Gson
 import org.json.JSONObject
 import java.util.*
 
+/** Bridge between WebView and its client where all the javascript interfaces are designed. */
 class AndroidWebViewBridge(
     private val context: Activity,
     private val webViewClient: ForemWebViewClient
@@ -37,6 +38,12 @@ class AndroidWebViewBridge(
         }
     }
 
+    /**
+     * Function which gets called once the webview has fully loaded a valid forem instance which
+     * contains the details of forem like name, logo, etc.
+     *
+     * @param foremMetaDataJsonObject an object which contains meta data of forem.
+     */
     @JavascriptInterface
     fun processForemMetaData(foremMetaDataJsonObject: String) {
         var foremMetaDataMap: Map<String, String> = HashMap()
@@ -44,11 +51,22 @@ class AndroidWebViewBridge(
         webViewClient.foremMetaDataReceived(foremMetaDataMap)
     }
 
+    /**
+     * Function which gets called by website when an error occurs.
+     *
+     * @param errorTag tag required for log message.
+     * @param errorMessage message required for log message.
+     */
     @JavascriptInterface
     fun logError(errorTag: String, errorMessage: String) {
         Log.e(errorTag, errorMessage)
     }
 
+    /**
+     * Function which gets called once the user has successfully logged-in.
+     *
+     * @param message contains user related meta data like name, id, etc.
+     */
     @JavascriptInterface
     fun userLoginMessage(message: String) {
         val userDataObject = JSONObject(message)
@@ -59,17 +77,28 @@ class AndroidWebViewBridge(
         }
     }
 
+    /**
+     * Function which gets called once the user has successfully logged-out.
+     *
+     * @param message contains user related data.
+     */
     @JavascriptInterface
     fun userLogoutMessage(message: String) {
         // User logged-out
         webViewClient.userLoggedOut()
     }
 
+    /**
+     * Function which gets triggered when user does any action related to podcast.
+     *
+     * @param message contains information related to podcast like its url, play action, pause
+     *    action, title, etc. which can be used to load th podcast in audio service.
+     */
     @JavascriptInterface
     fun podcastMessage(message: String) {
         // Reference: https://stackoverflow.com/questions/9446868/access-ui-from-javascript-on-android
         context.runOnUiThread {
-            var map: Map<String, String> = java.util.HashMap()
+            var map: Map<String, String> = HashMap()
             map = Gson().fromJson(message, map.javaClass)
             when (map["action"]) {
                 "load" -> loadPodcast(map["url"])
@@ -115,7 +144,7 @@ class AndroidWebViewBridge(
         }
     }
 
-    fun podcastTimeUpdate() {
+    private fun podcastTimeUpdate() {
         audioService?.let {
             val time = it.currentTimeInSec() / 1000
             val duration = it.durationInSec() / 1000
@@ -133,6 +162,11 @@ class AndroidWebViewBridge(
         }
     }
 
+    /**
+     * Function which gets triggered when user first clicks on video in webview player.
+     *
+     * @param message contains information like video url and current-time in video.
+     */
     @JavascriptInterface
     fun videoMessage(message: String) {
         var map: Map<String, String> = HashMap()
@@ -157,6 +191,8 @@ class AndroidWebViewBridge(
     /**
      * This method is used to open the native share-sheet of Android when simple text is to be
      * shared from the web-view.
+     *
+     * @param text contains the text which needs to be shared natively.
      */
     @JavascriptInterface
     fun shareText(text: String) {
@@ -171,6 +207,11 @@ class AndroidWebViewBridge(
         context.startActivity(shareIntent)
     }
 
+    /**
+     * This function copies the text natively to clipboard.
+     *
+     * @param copyText contains the text which gets saved to clipboard natively.
+     */
     @JavascriptInterface
     fun copyToClipboard(copyText: String) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
@@ -178,16 +219,29 @@ class AndroidWebViewBridge(
         clipboard?.setPrimaryClip(clipData)
     }
 
+    /**
+     * Shows toast in android app triggered via website.
+     *
+     * @param message required to be displayed in Toast.
+     */
     @JavascriptInterface
     fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
+    /**
+     * Helps in sending the timer value for the video to the backend.
+     *
+     * @param seconds new updated value of current time in video.
+     */
     fun updateTimer(seconds: String) {
         val message = mapOf("action" to "tick", "currentTime" to seconds)
         webViewClient.sendBridgeMessage(BridgeMessageType.VIDEO, message)
     }
 
+    /**
+     * Helps in sending the information to webview that the video has been paused.
+     */
     fun videoPlayerPaused() {
         webViewClient.sendBridgeMessage(BridgeMessageType.VIDEO, mapOf("action" to "pause"))
     }

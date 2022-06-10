@@ -1,5 +1,6 @@
 package com.forem.webview
 
+/** Central class which holds all constants mainly keys and urls. */
 object WebViewConstants {
     const val FOREM_META_DATA_RESULT_LISTENER_KEY = "ForemMetaData.resultListener"
     const val FOREM_META_DATA_URL_KEY = "ForemMetaData.url"

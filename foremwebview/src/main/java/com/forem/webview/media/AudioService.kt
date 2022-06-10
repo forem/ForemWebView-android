@@ -28,6 +28,11 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 
+/**
+ * Class which helps us play the podcasts in foreground as well as background.
+ *
+ * This class is responsible for starting and terminating the podcast.
+ */
 class AudioService : LifecycleService() {
     private val binder = AudioServiceBinder()
 
@@ -40,12 +45,25 @@ class AudioService : LifecycleService() {
     private var playerNotificationManager: PlayerNotificationManager? = null
     private var mediaSession: MediaSessionCompat? = null
 
+    /** Binder to use AudioService. */
     inner class AudioServiceBinder : Binder() {
         val service: AudioService
             get() = this@AudioService
     }
 
     companion object {
+        private const val argPodcastUrl = "ARG_PODCAST_URL"
+        private const val playbackChannelId = "playback_channel"
+        private const val mediaSessionTag = "Forem"
+        private const val playbackNotificationId = 1
+
+        /**
+         * Creates a new intent which calls AudioService on main thread.
+         *
+         * @param context the context of the activity or fragment.
+         * @param episodeUrl the url of the podcast which needs to be played.
+         * @return an [AudioService] intent.
+         */
         @MainThread
         fun newIntent(
             context: Context,
@@ -53,11 +71,6 @@ class AudioService : LifecycleService() {
         ) = Intent(context, AudioService::class.java).apply {
             putExtra(argPodcastUrl, episodeUrl)
         }
-
-        const val argPodcastUrl = "ARG_PODCAST_URL"
-        const val playbackChannelId = "playback_channel"
-        const val mediaSessionTag = "Forem"
-        const val playbackNotificationId = 1
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -192,6 +205,12 @@ class AudioService : LifecycleService() {
         playerNotificationManager?.setMediaSessionToken(mediaSession!!.sessionToken)
     }
 
+    /**
+     * Plays the podcast on main thread.
+     *
+     * @param audioUrl the url of the podcast.
+     * @param seconds starting time of the padcast.
+     */
     @MainThread
     fun play(audioUrl: String?, seconds: String?) {
         if (currentPodcastUrl != audioUrl) {
@@ -204,11 +223,17 @@ class AudioService : LifecycleService() {
         player?.playWhenReady = true
     }
 
+    /** Function to pause the podcast. */
     @MainThread
     fun pause() {
         player?.playWhenReady = false
     }
 
+    /**
+     * Function to mute the podcast.
+     *
+     * @param muted the url of the podcast.
+     */
     @MainThread
     fun mute(muted: String?) {
         muted?.toBoolean()?.let {
@@ -220,6 +245,11 @@ class AudioService : LifecycleService() {
         }
     }
 
+    /**
+     * Function to change the volume of the podcast.
+     *
+     * @param volume the volume which needs to be set to podcast.
+     */
     @MainThread
     fun volume(volume: String?) {
         volume?.toFloat()?.let {
@@ -227,6 +257,11 @@ class AudioService : LifecycleService() {
         }
     }
 
+    /**
+     * Function to change the playback speed of podcast.
+     *
+     * @param rate the rate at which the podcast needs to be played.
+     */
     @MainThread
     fun rate(rate: String?) {
         rate?.toFloat()?.let {
@@ -234,6 +269,11 @@ class AudioService : LifecycleService() {
         }
     }
 
+    /**
+     * This function helps to skip to specified time in podcast.
+     *
+     * @param seconds the time in the audio at which the podcast should play.
+     */
     @MainThread
     fun seekTo(seconds: String?) {
         seconds?.toFloat()?.let {
@@ -241,6 +281,13 @@ class AudioService : LifecycleService() {
         }
     }
 
+    /**
+     * This function helps to show the meta data of podcast in notification.
+     *
+     * @param episodeName the name of the episode which gets displayed in notification.
+     * @param pdName the name of the podcast which gets displayed in notification.
+     * @param url the image which needs to be displayed in the notification.
+     */
     @MainThread
     fun loadMetadata(epName: String?, pdName: String?, url: String?) {
         episodeName = epName
@@ -248,11 +295,21 @@ class AudioService : LifecycleService() {
         imageUrl = url
     }
 
+    /**
+     * Get current value of time in seconds for audio position.
+     *
+     * @return the time at which currently audio is playing in seconds.
+     */
     @MainThread
     fun currentTimeInSec(): Long {
         return player?.currentPosition ?: 0
     }
 
+    /**
+     * Get the total duration of podcast in seconds.
+     *
+     * @return the total duration of podcast in seconds.
+     */
     @MainThread
     fun durationInSec(): Long {
         return player?.duration ?: 0L

@@ -5,6 +5,7 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 
+/** Class which extends WebChromeClient to override all out-of WebView actions. */
 class ForemWebChromeClient(
     private val fileChooserListener: FileChooserListener
 ) : WebChromeClient() {

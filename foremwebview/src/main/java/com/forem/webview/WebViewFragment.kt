@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import java.net.URL
 
-/** Displays forem in fragment. */
+/** Displays forem instance in a fragment. */
 class WebViewFragment : Fragment(), FileChooserListener {
 
     companion object {
@@ -27,7 +27,18 @@ class WebViewFragment : Fragment(), FileChooserListener {
         private const val URL_ARGUMENT_KEY = "WebViewFragment.url"
         private const val NEEDS_FOREM_META_DATA = "WebViewFragment.needsForemMetaData"
 
-        /** Creates a new instance of [WebViewFragment]. */
+        /**
+         * Creates a new instance of [WebViewFragment].
+         *
+         * @param url of the forem instance.
+         * @param resultListenerKey is a key required to send data back to
+         *     [setFragmentResultListener].
+         * @param needsForemMetaData determines whether [WebView] needs to load the metadata like
+         *     name, logo, etc and send it back to the parent. This needs to be true when the
+         *     user has tried to add forem instance by adding a domain name so that we can get
+         *     other information like name, logo, etc.
+         * @return a new instance of [WebViewFragment].
+         */
         fun newInstance(
             url: String,
             resultListenerKey: String,
@@ -43,7 +54,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
         }
     }
 
-    lateinit var foremWebViewSession: ForemWebViewSession
+    private lateinit var foremWebViewSession: ForemWebViewSession
 
     private lateinit var resultListenerKey: String
 
@@ -91,7 +102,6 @@ class WebViewFragment : Fragment(), FileChooserListener {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(baseUrl: String, needsForemMetaData: Boolean) {
-
         // User Agent
         val defaultUserAgent = webView!!.settings.userAgentString
         val extensionUserAgent = if (baseUrl != WebViewConstants.PASSPORT_URL)
@@ -276,6 +286,10 @@ class WebViewFragment : Fragment(), FileChooserListener {
         }
     }
 
+    /**
+     * Function which gets called whenever the back button is pressed either android app to move
+     * to previous webpage or exit the app.
+     */
     fun onBackPressedFragment() {
         centrallyHandleBackNavigation(canExitApp = true)
     }
@@ -284,16 +298,25 @@ class WebViewFragment : Fragment(), FileChooserListener {
         sendDataToFragmentResultListener(homeReached = true)
     }
 
+    /**
+     * Navigates back in webview history.
+     */
     fun navigateBack() {
         centrallyHandleBackNavigation(canExitApp = false)
     }
 
+    /**
+     * Navigates forward in webview history.
+     */
     fun navigateForward() {
         if (webView!!.canGoForward()) {
             webView!!.goForward()
         }
     }
 
+    /**
+     * Updates the forem instance with new url and loads in WebView.
+     */
     fun updateForemInstance(baseUrl: String) {
         if (::webViewClient.isInitialized) {
             webViewClient.clearHistory()

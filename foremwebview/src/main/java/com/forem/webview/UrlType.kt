@@ -1,5 +1,6 @@
 package com.forem.webview
 
+/** Enum corresponding to different types of url possible w.r.t. to host url. */
 enum class UrlType {
     /** Links which are part of a particular forem. */
     HOST_LINK,
