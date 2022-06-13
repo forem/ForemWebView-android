@@ -12,7 +12,7 @@ private const val WEB_VIEW_FRAGMENT_RESULT_LISTENER_KEY =
 private const val DEV_TO = "https://dev.to"
 private const val MMA_LIFE = "https://www.thismmalife.com/"
 
-/** Helper activity which connects with foremwebview module.*/
+/** Helper activity which connects with foremwebview module. */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var backImageView: ImageView
