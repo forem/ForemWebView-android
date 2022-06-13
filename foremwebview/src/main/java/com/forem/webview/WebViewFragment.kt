@@ -325,6 +325,13 @@ class WebViewFragment : Fragment(), FileChooserListener {
         }
     }
 
+    /**
+     * Refreshes the current forem instance.
+     */
+    fun refresh() {
+        webView!!.reload()
+    }
+
     private fun sendDataToFragmentResultListener(
         homeReached: Boolean = false,
         canGoBack: Boolean = false,
