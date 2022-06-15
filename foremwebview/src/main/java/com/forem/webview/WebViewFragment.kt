@@ -321,6 +321,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
         if (::webViewClient.isInitialized) {
             webViewClient.clearHistory()
             this.baseUrl = baseUrl
+            webView?.loadUrl(baseUrl)
             webViewClient.setBaseUrl(baseUrl)
         }
     }
