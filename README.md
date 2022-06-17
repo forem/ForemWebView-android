@@ -52,11 +52,6 @@ allprojects {
 **Documentation**
 - [Using library in your app](https://github.com/forem/ForemWebView-android/wiki/Using-ForemWebView-android-Library)
 
-### Linter: ktlint
-We use [ktlint](https://github.com/pinterest/ktlint#installation) for static code analysis to make sure we follow best common practices.
-
-Once installed you can simply use `ktlint` in command-line to check the code for linter issues. You can find all other commands in `ktlint --help`.
- -->
 ## How to contribute
 
 1.  Fork the project & clone locally.
