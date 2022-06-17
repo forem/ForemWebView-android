@@ -50,28 +50,8 @@ allprojects {
 ```
 
 **Documentation**
-- [Using library in your app]()
-- [Deep dive code details]()
+- [Using library in your app](https://github.com/forem/ForemWebView-android/wiki/Using-ForemWebView-android-Library)
 
-<!-- ## Setting up the Project
-
-### System Requirements
-
-You will need to have [Android Studio](https://developer.android.com/studio) to run this project.
- -->
-
-
-<!-- ### Push Notifications [FCM]
-
-For push notification delivery we use [Firebase](https://firebase.google.com/). In order to get the app running locally you'll need a `google-services.json` configuration file from Firebase, otherwise you'll encounter the following error: `File google-services.json is missing. The Google Services Plugin cannot function without it.`
-
-Follow below mentioned steps to get your `google-services.json` file.
-1. Sign-up/Sign-In for free on [Firebase]
-2. Create a new project, you can name it as `Forem Android` and finish all the steps.
-3. Download the `google-services.json` file by following the steps mentioned in [Get config file for your Android app
-](https://support.google.com/firebase/answer/7015592?hl=en#zippy=%2Cin-this-article)
-4. Copy this file in [app](https://github.com/forem/forem-android/tree/master/app) folder of the project. -->
-<!-- 
 ### Linter: ktlint
 We use [ktlint](https://github.com/pinterest/ktlint#installation) for static code analysis to make sure we follow best common practices.
 
