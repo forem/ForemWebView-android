@@ -8,16 +8,57 @@ This is the official repository for the ForemWebView-android library which is us
 ForemWebView-android is a [WebView](https://developer.android.com/guide/webapps/webview) based library designed specifically keeping in mind the [Forem Android App](https://github.com/forem/forem-android). This library can be used by an other app to use instance of a [forem](https://forem.com/) in their own android app.
 
 
-## Contributions
+## Setting up the library
 
-We expect contributors to abide by our underlying [code of conduct](./CODE_OF_CONDUCT.md). All conversations and discussions on GitHub (issues, pull requests, etc.) must be respectful and harassment-free.
+### Gradle Setup
 
-## Setting up the Project
+1. Add it in your root build.gradle at the end of repositories:
+
+```
+allprojects {
+  repositories {
+   ...
+   maven { url 'https://jitpack.io' }
+  }
+}
+```
+
+2. Add the dependency
+```
+  implementation 'com.github.forem:ForemWebView-android:${latest_release}'
+```
+
+### Maven Setup
+1. Adding jitpack
+
+```
+<repositories>
+  <repository>
+   <id>jitpack.io</id>
+   <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+```
+
+2. Add the dependency
+```
+<dependency>
+  <groupId>com.github.forem</groupId>
+  <artifactId>ForemWebView-android</artifactId>
+  <version>{latest_release}</version>
+</dependency>
+```
+
+**Documentation**
+- [Using library in your app]()
+- [Deep dive code details]()
+
+<!-- ## Setting up the Project
 
 ### System Requirements
 
 You will need to have [Android Studio](https://developer.android.com/studio) to run this project.
-
+ -->
 
 
 <!-- ### Push Notifications [FCM]
@@ -43,6 +84,10 @@ Once installed you can simply use `ktlint` in command-line to check the code for
 3.  Code and commit your changes. Bonus points if you write a [good commit message](https://chris.beams.io/posts/git-commit/): `git commit -m 'Add some feature'`
 4.  Push to the branch: `git push origin feature/that-new-feature`
 5.  Create a pull request for your branch 🎉
+
+## Contributions
+
+We expect contributors to abide by our underlying [code of conduct](./CODE_OF_CONDUCT.md). All conversations and discussions on GitHub (issues, pull requests, etc.) must be respectful and harassment-free.
 
 ## License
 
