@@ -1,7 +1,10 @@
 package com.foremlibrary.app
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.forem.webview.WebViewConstants
 import com.forem.webview.WebViewFragment
@@ -15,6 +18,16 @@ private const val MMA_LIFE = "https://www.thismmalife.com/"
 /** Helper activity which connects with foremwebview module. */
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val FOREM_URL_EXTRA = "MainActivity.forem_url"
+
+        fun newInstance(context: Context, url: String?): Intent {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra(FOREM_URL_EXTRA, url)
+            return intent
+        }
+    }
+
     private lateinit var backImageView: ImageView
     private lateinit var forwardImageView: ImageView
 
@@ -22,7 +35,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        loadOrUpdateFragment(DEV_TO)
+        val url = intent?.getStringExtra(FOREM_URL_EXTRA) ?: ""
+
+        if (url.isEmpty()) {
+            loadOrUpdateFragment(DEV_TO)
+        } else {
+            loadOrUpdateFragment(url)
+        }
 
         backImageView = findViewById(R.id.back_image_view)
         forwardImageView = findViewById(R.id.forward_image_view)
@@ -34,6 +53,10 @@ class MainActivity : AppCompatActivity() {
         forwardImageView.setOnClickListener {
             onWebViewForwardClicked()
         }
+
+        // Disabled by default
+        backImageView.isEnabled = false
+        forwardImageView.isEnabled = false
     }
 
     override fun onBackPressed() {
