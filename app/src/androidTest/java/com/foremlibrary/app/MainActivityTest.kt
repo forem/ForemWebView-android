@@ -20,9 +20,12 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import com.foremlibrary.app.testing.EspressoIdlingResource
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -33,6 +36,16 @@ private const val DEV_LOCAL_2 = "file:///android_asset/forem.dev_2.html"
 class MainActivityTest {
 
     private val context: Context = getInstrumentation().targetContext
+
+    @Before
+    fun setup() {
+        EspressoIdlingResource.increment()
+    }
+
+    @After
+    fun tearDown() {
+        EspressoIdlingResource.decrement()
+    }
 
     @Test
     fun testMainActivity_backImageView_isDisabledByDefault() {
@@ -167,9 +180,7 @@ class MainActivityTest {
         return MainActivity.newInstance(context = context, url = foremUrl)
     }
 
-    /**
-     * Perform action of waiting for a specific time.
-     */
+    /** Perform action of waiting for a specific time. */
     private fun waitFor(millis: Long): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> {
