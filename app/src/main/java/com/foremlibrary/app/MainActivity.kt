@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.forem.webview.WebViewConstants
 import com.forem.webview.WebViewFragment
@@ -12,6 +11,7 @@ import com.forem.webview.WebViewFragment
 private const val WEB_VIEW_FRAGMENT_RESULT_LISTENER_KEY =
     "MainActivity.WebViewFragment.resultListener"
 
+private const val DEV_LOCAL = "file:///android_asset/forem.dev.html"
 private const val DEV_TO = "https://dev.to"
 private const val MMA_LIFE = "https://www.thismmalife.com/"
 
