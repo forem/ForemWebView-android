@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.forem.webview.WebViewConstants
 import com.forem.webview.WebViewFragment
 
@@ -12,6 +13,7 @@ private const val WEB_VIEW_FRAGMENT_RESULT_LISTENER_KEY =
     "MainActivity.WebViewFragment.resultListener"
 
 private const val DEV_LOCAL = "file:///android_asset/forem.dev.html"
+private const val ACCOUNTS_FOREM_LOCAL_1 = "file:///android_asset/accounts.forem_1.html"
 private const val DEV_TO = "https://dev.to"
 private const val MMA_LIFE = "https://www.thismmalife.com/"
 
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var titleToolbar: Toolbar
     private lateinit var backImageView: ImageView
     private lateinit var forwardImageView: ImageView
 
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             loadOrUpdateFragment(url)
         }
 
+        titleToolbar = findViewById(R.id.title_toolbar)
         backImageView = findViewById(R.id.back_image_view)
         forwardImageView = findViewById(R.id.forward_image_view)
 
