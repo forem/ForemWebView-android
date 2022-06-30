@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.forem.webview.WebViewConstants
 import com.forem.webview.WebViewFragment
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var foremNameTextView: TextView
     private lateinit var backImageView: ImageView
     private lateinit var forwardImageView: ImageView
 
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             loadOrUpdateFragment(url)
         }
 
+        foremNameTextView = findViewById(R.id.forem_name_text_view)
         backImageView = findViewById(R.id.back_image_view)
         forwardImageView = findViewById(R.id.forward_image_view)
 
@@ -66,6 +69,16 @@ class MainActivity : AppCompatActivity() {
     private fun loadOrUpdateFragment(url: String) {
         if (getWebViewFragment() == null) {
             supportFragmentManager.setFragmentResultListener(
+                WebViewConstants.FOREM_META_DATA_RESULT_LISTENER_KEY,
+                /* lifecycleOwner= */ this
+            ) { _, bundle ->
+                val logoUrl = bundle.getString(WebViewConstants.FOREM_META_DATA_LOGO_KEY)
+                val foremUrl = bundle.getString(WebViewConstants.FOREM_META_DATA_URL_KEY)
+                val foremName = bundle.getString(WebViewConstants.FOREM_META_DATA_TITLE_KEY)
+                foremNameTextView.text = foremName
+            }
+
+            supportFragmentManager.setFragmentResultListener(
                 WEB_VIEW_FRAGMENT_RESULT_LISTENER_KEY,
                 /* lifecycleOwner= */ this
             ) { _, bundle ->
@@ -84,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             val webViewFragment = WebViewFragment.newInstance(
                 url,
                 WEB_VIEW_FRAGMENT_RESULT_LISTENER_KEY,
-                needsForemMetaData = false
+                needsForemMetaData = true
             )
             this.supportFragmentManager.beginTransaction().add(
                 R.id.web_view_fragment,

@@ -26,28 +26,38 @@
 
     <ImageView
       android:id="@+id/back_image_view"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:minWidth="48dp"
       android:minHeight="48dp"
       android:padding="16dp"
       android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@id/forward_image_view"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
       android:id="@+id/forward_image_view"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:minWidth="48dp"
       android:minHeight="48dp"
       android:padding="16dp"
       android:src="@drawable/ic_baseline_arrow_forward_ios_24"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@id/back_image_view"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+      android:id="@+id/forem_name_text_view"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:gravity="end"
+      android:textColor="@color/black"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/forward_image_view"
       app:layout_constraintTop_toTopOf="parent" />
   </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
