@@ -5,23 +5,6 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <com.google.android.material.appbar.AppBarLayout
-    android:id="@+id/titleAppBarLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
-
-    <androidx.appcompat.widget.Toolbar
-      android:id="@+id/title_toolbar"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      app:subtitleTextColor="@color/white"
-      app:title="@string/app_name"
-      app:titleTextColor="@color/white" />
-  </com.google.android.material.appbar.AppBarLayout>
-
   <FrameLayout
     android:id="@+id/web_view_fragment"
     android:layout_width="0dp"
@@ -30,7 +13,7 @@
     app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_container"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/titleAppBarLayout" />
+    app:layout_constraintTop_toTopOf="parent" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/bottom_navigation_container"
@@ -43,28 +26,38 @@
 
     <ImageView
       android:id="@+id/back_image_view"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:minWidth="48dp"
       android:minHeight="48dp"
       android:padding="16dp"
       android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@id/forward_image_view"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
       android:id="@+id/forward_image_view"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:minWidth="48dp"
       android:minHeight="48dp"
       android:padding="16dp"
       android:src="@drawable/ic_baseline_arrow_forward_ios_24"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@id/back_image_view"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+      android:id="@+id/forem_name_text_view"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:gravity="end"
+      android:textColor="@color/black"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/forward_image_view"
       app:layout_constraintTop_toTopOf="parent" />
   </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

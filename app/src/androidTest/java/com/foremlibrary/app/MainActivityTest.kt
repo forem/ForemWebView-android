@@ -20,6 +20,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -43,7 +44,6 @@ import org.junit.runner.RunWith
 import java.util.concurrent.TimeoutException
 
 private const val DEV_LOCAL_1 = "file:///android_asset/forem.dev.html"
-private const val DEV_LOCAL_2 = "file:///android_asset/forem.dev_2.html"
 
 private const val ACCOUNTS_FOREM_URL = "https://account.forem.com"
 private const val DEV_TO = "https://dev.to"
@@ -55,10 +55,9 @@ class MainActivityTest {
 
     private val context: Context = getInstrumentation().targetContext
 
-    // TODO: Add Espresso Test Cases
+    // TODO: Pending Test Cases
     //  - AudioPlayer works -> We need UiAutomator for this test. It cannot be tested using Espresso.
     //  - Image Upload does work -> We need UiAutomator for this test as sign-in process is not easy.
-    //  - Forem Meta data is fetched correctly
 
     @Before
     fun setup() {
@@ -305,11 +304,11 @@ class MainActivityTest {
     }
 
     @Test
-    fun testMainActivity_loadDevArticle_clickOnShare_opensShareIntent() {
+    fun testMainActivity_loadDevArticle_clickOnMoreOptions_opensShareIntent() {
         launchActivity<MainActivity>(createMainActivityIntent("https://dev.to/devteam/for-empowering-community-2k6h"))
 
         onWebView()
-            .withElement(findElement(Locator.ID, "crayons-article__video"))
+            .withElement(findElement(Locator.ID, "article-show-more-button"))
             .perform(webClick())
 
         intended(
@@ -335,6 +334,18 @@ class MainActivityTest {
             )
         )
         intended(hasExtra(VideoPlayerActivity.VIDEO_TIME_INTENT_EXTRA, "0"))
+    }
+
+    @Test
+    fun testMainActivity_loadDevTo_foremNameIsCorrectlyDisplayed() {
+        launchActivity<MainActivity>(createMainActivityIntent(DEV_TO))
+
+        onWebView()
+            .withElement(findElement(Locator.CLASS_NAME, "c-cta--branded"))
+            .check(webMatches(getText(), containsString("Create account")))
+
+        onView(withId(R.id.forem_name_text_view))
+            .check(matches(withText(containsString("DEV"))))
     }
 
     private fun createMainActivityIntent(foremUrl: String): Intent {
