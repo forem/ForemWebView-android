@@ -58,6 +58,7 @@ class MainActivityTest {
     // TODO: Pending Test Cases
     //  - AudioPlayer works -> We need UiAutomator for this test. It cannot be tested using Espresso.
     //  - Image Upload does work -> We need UiAutomator for this test as sign-in process is not easy.
+    //  - Custom Tab Intent -> We need UiAutomator for this test.
 
     @Before
     fun setup() {
