@@ -67,8 +67,8 @@ object UrlChecks {
      */
     fun checkUrlIsCorrect(url: String): Boolean {
         return try {
-            val checkURL = URL(url)
-            val checkURI = Uri.parse(url)
+            URL(url)
+            Uri.parse(url)
             return true
         } catch (e: MalformedURLException) {
             false
