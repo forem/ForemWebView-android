@@ -16,8 +16,6 @@ android {
         buildConfigField("String", "ANDROID_BRIDGE", "\"AndroidBridge\"")
         buildConfigField("String", "FOREM_AGENT_EXTENSION", "\"ForemWebView/1.0.9\"")
         buildConfigField("String", "PASSPORT_AGENT_EXTENSION", "\"ForemWebView/passport\"")
-
-        consumerProguardFiles "consumer-rules.pro"
     }
     buildTypes {
         release {
