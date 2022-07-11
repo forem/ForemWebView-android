@@ -34,6 +34,8 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
          */
         fun newInstance(context: Context, url: String, time: String): Intent {
             val intent = Intent(context, VideoPlayerActivity::class.java)
+            // This flag makes sure that there is only one instance of this activity.
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             intent.putExtra(VIDEO_URL_INTENT_EXTRA, url)
             intent.putExtra(VIDEO_TIME_INTENT_EXTRA, time)
             return intent
