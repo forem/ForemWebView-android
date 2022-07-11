@@ -78,6 +78,14 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         timer.schedule(TimerUpdate(), 0, 1000)
     }
 
+    override fun onPause() {
+        if (::player.isInitialized) {
+            player.pause()
+        }
+        foremWebViewSession.videoPlayerPaused()
+        super.onPause()
+    }
+
     override fun onDestroy() {
         if (::player.isInitialized) {
             player.playWhenReady = false
@@ -88,7 +96,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
     }
 
     private fun timeUpdate() {
-        if (::player.isInitialized) {
+        if (::player.isInitialized && player.isPlaying) {
             val milliseconds = player.currentPosition
             val currentTime = (milliseconds / 1000).toString()
             foremWebViewSession.videoPlayerTimerUpdate(currentTime)
