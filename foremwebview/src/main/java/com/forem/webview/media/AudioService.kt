@@ -181,7 +181,6 @@ class AudioService : LifecycleService() {
                 override fun onCustomAction(player: Player, action: String, intent: Intent) {
                 }
             },
-            // TODO(#174): Can try exo-player icons too.
             R.drawable.ic_forem_notification,
             R.drawable.ic_baseline_play_arrow_24,
             R.drawable.ic_baseline_pause_24,
