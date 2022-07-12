@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Window
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.forem.webview.ForemWebViewSession
 import com.forem.webview.R
@@ -49,6 +51,12 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        this.window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
 
         setContentView(R.layout.video_player_activity)
 
