@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">ForemWebView</string>
+  <string name="app_name">Forem Library</string>
   <string name="playback_channel_description">Podcast Player</string>
   <string name="send_email_with">Send email with…</string>
   <string name="select_picture">Select picture</string>
