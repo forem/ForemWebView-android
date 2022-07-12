@@ -25,6 +25,9 @@ class AndroidWebViewBridge(
 
     private var timer: Timer? = null
 
+    // This queue maintains the list of all pending actions that needs to be executed by
+    // AudioService. If we do not use this list and audioService is null then some of the actions
+    // may fail.
     private val pendingPodcastActionsQueue: Queue<String> = LinkedList()
 
     // AudioService is initialized when onServiceConnected is executed after/during binding is done.
@@ -33,6 +36,7 @@ class AndroidWebViewBridge(
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as AudioService.AudioServiceBinder
             audioService = binder.service
+            // Once the audio service is bind-ed, execute all pending actions.
             pendingPodcastActionsQueue.forEach {
                 podcastMessage(it)
             }
