@@ -6,8 +6,7 @@
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.INTERNET" />
 
-  <application
-    android:supportsRtl="true">
+  <application android:supportsRtl="true">
     <activity
       android:name=".video.VideoPlayerActivity"
       android:configChanges="orientation|screenSize|layoutDirection" />
