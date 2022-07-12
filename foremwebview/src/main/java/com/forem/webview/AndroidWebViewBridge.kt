@@ -25,12 +25,17 @@ class AndroidWebViewBridge(
 
     private var timer: Timer? = null
 
+    private val pendingPodcastActionsQueue: Queue<String> = LinkedList()
+
     // AudioService is initialized when onServiceConnected is executed after/during binding is done.
     private var audioService: AudioService? = null
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as AudioService.AudioServiceBinder
             audioService = binder.service
+            pendingPodcastActionsQueue.forEach {
+                podcastMessage(it)
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -102,17 +107,52 @@ class AndroidWebViewBridge(
             map = Gson().fromJson(message, map.javaClass)
             when (map["action"]) {
                 "load" -> loadPodcast(map["url"])
-                "play" -> audioService?.play(map["url"], map["seconds"])
-                "pause" -> audioService?.pause()
-                "seek" -> audioService?.seekTo(map["seconds"])
-                "rate" -> audioService?.rate(map["rate"])
-                "muted" -> audioService?.mute(map["muted"])
-                "volume" -> audioService?.volume(map["volume"])
-                "metadata" -> audioService?.loadMetadata(
-                    map["episodeName"],
-                    map["podcastName"],
-                    map["imageUrl"]
-                )
+                "play" -> {
+                    if (audioService == null) {
+                        pendingPodcastActionsQueue.add(message)
+                    }
+                    audioService?.play(map["url"], map["seconds"])
+                }
+                "pause" -> {
+                    if (audioService == null) {
+                        pendingPodcastActionsQueue.add(message)
+                    }
+                    audioService?.pause()
+                }
+                "seek" -> {
+                    if (audioService == null) {
+                        pendingPodcastActionsQueue.add(message)
+                    }
+                    audioService?.seekTo(map["seconds"])
+                }
+                "rate" -> {
+                    if (audioService == null) {
+                        pendingPodcastActionsQueue.add(message)
+                    }
+                    audioService?.rate(map["rate"])
+                }
+                "muted" -> {
+                    if (audioService == null) {
+                        pendingPodcastActionsQueue.add(message)
+                    }
+                    audioService?.mute(map["muted"])
+                }
+                "volume" -> {
+                    if (audioService == null) {
+                        pendingPodcastActionsQueue.add(message)
+                    }
+                    audioService?.volume(map["volume"])
+                }
+                "metadata" -> {
+                    if (audioService == null) {
+                        pendingPodcastActionsQueue.add(message)
+                    }
+                    audioService?.loadMetadata(
+                        map["episodeName"],
+                        map["podcastName"],
+                        map["imageUrl"]
+                    )
+                }
                 "terminate" -> terminatePodcast()
                 else -> logError("Podcast Error", "Unknown action")
             }
@@ -121,6 +161,10 @@ class AndroidWebViewBridge(
 
     private fun loadPodcast(url: String?) {
         if (url == null) return
+
+        if (audioService != null && timer != null) {
+            return
+        }
 
         AudioService.newIntent(context, url).also { intent ->
             context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
@@ -135,9 +179,8 @@ class AndroidWebViewBridge(
     private fun terminatePodcast() {
         timer?.cancel()
         timer = null
-
         audioService?.let {
-            it.pause()
+            it.clearNotification()
             context.unbindService(connection)
             context.stopService(Intent(context, AudioService::class.java))
             audioService = null
@@ -179,9 +222,9 @@ class AndroidWebViewBridge(
 
     private fun playVideo(url: String?, seconds: String?) {
         url?.let {
-            // Pause the audio player in case the user is currently listening to a audio (podcast)
-            audioService?.pause()
-            timer?.cancel()
+            context.runOnUiThread {
+                audioService?.pause()
+            }
 
             val intent = VideoPlayerActivity.newInstance(context, url, seconds ?: "0")
             context.startActivity(intent)

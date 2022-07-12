@@ -55,7 +55,7 @@ class AudioService : LifecycleService() {
         private const val argPodcastUrl = "ARG_PODCAST_URL"
         private const val playbackChannelId = "playback_channel"
         private const val mediaSessionTag = "Forem"
-        private const val playbackNotificationId = 1
+        private const val notificationId = 1
 
         /**
          * Creates a new intent which calls AudioService on main thread.
@@ -102,7 +102,7 @@ class AudioService : LifecycleService() {
             playbackChannelId,
             R.string.app_name,
             R.string.playback_channel_description,
-            playbackNotificationId,
+            notificationId,
             object : PlayerNotificationManager.MediaDescriptionAdapter {
                 override fun getCurrentContentTitle(player: Player): String {
                     return episodeName ?: getString(R.string.app_name)
@@ -211,7 +211,6 @@ class AudioService : LifecycleService() {
      * @param audioUrl the url of the podcast.
      * @param seconds starting time of the padcast.
      */
-    @MainThread
     fun play(audioUrl: String?, seconds: String?) {
         if (currentPodcastUrl != audioUrl) {
             currentPodcastUrl = audioUrl
@@ -227,6 +226,10 @@ class AudioService : LifecycleService() {
     @MainThread
     fun pause() {
         player?.playWhenReady = false
+    }
+
+    fun clearNotification() {
+        player?.release()
     }
 
     /**
