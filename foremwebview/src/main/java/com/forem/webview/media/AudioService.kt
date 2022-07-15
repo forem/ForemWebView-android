@@ -5,16 +5,19 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaMetadata
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
+import com.bumptech.glide.Glide
 import com.forem.webview.BuildConfig
 import com.forem.webview.R
 import com.google.android.exoplayer2.C
@@ -27,6 +30,11 @@ import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import java.io.IOException
+import java.io.InputStream
+import java.net.URL
+import java.util.concurrent.ExecutionException
+import javax.net.ssl.HttpsURLConnection
 
 /**
  * Class which helps us play the podcasts in foreground as well as background.
@@ -121,7 +129,28 @@ class AudioService : LifecycleService() {
                     player: Player,
                     callback: PlayerNotificationManager.BitmapCallback
                 ): Bitmap? {
-                    return null
+                    if (imageUrl == null) return null
+
+                    var largeIconBitmap: Bitmap? = null
+                    val thread = Thread {
+                        try {
+                            val uri = Uri.parse(imageUrl)
+                            val bitmap = Glide.with(applicationContext)
+                                .asBitmap()
+                                .load(uri)
+                                .submit().get()
+
+                            largeIconBitmap = bitmap
+                            callback.onBitmap(bitmap)
+                        } catch (e: ExecutionException) {
+                            e.printStackTrace()
+                        } catch (e: InterruptedException) {
+                            e.printStackTrace()
+                        }
+                    }
+                    thread.start()
+
+                    return largeIconBitmap
                 }
             },
             object : PlayerNotificationManager.NotificationListener {
@@ -136,6 +165,8 @@ class AudioService : LifecycleService() {
                     notificationId: Int,
                     dismissedByUser: Boolean
                 ) {
+                    // TODO: Handle onNotificationCancelled
+                    Log.d("TAG", "onNotificationCancelled: $notificationId, $dismissedByUser")
                     stopSelf()
                 }
 
@@ -202,6 +233,36 @@ class AudioService : LifecycleService() {
             .putString(MediaMetadata.METADATA_KEY_ARTIST, podcastName)
         mediaSession?.setMetadata(builder.build())
         playerNotificationManager?.setMediaSessionToken(mediaSession!!.sessionToken)
+    }
+
+    private fun largeImage(): Bitmap? {
+        Log.d("TAG", "largeImage: $imageUrl")
+        var image: Bitmap? = null
+        if (imageUrl.isNullOrEmpty()) {
+            return null
+        }
+        try {
+            val url = URL(imageUrl)
+            image = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+        } catch (e: IOException) {
+            Log.e("TAG", "largeImage", e)
+        }
+        return image
+
+    }
+
+    fun getBitmapFromURL(src: String?): Bitmap? {
+        return try {
+            val url = URL(src)
+            val connection: HttpsURLConnection = url.openConnection() as HttpsURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input: InputStream = connection.inputStream
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
 
     /**

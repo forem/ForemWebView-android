@@ -105,6 +105,7 @@ class AndroidWebViewBridge(
      */
     @JavascriptInterface
     fun podcastMessage(message: String) {
+        Log.d("TAG","podcastMessage: $message")
         // Reference: https://stackoverflow.com/questions/9446868/access-ui-from-javascript-on-android
         context.runOnUiThread {
             var map: Map<String, String> = HashMap()
@@ -154,7 +155,7 @@ class AndroidWebViewBridge(
                     audioService?.loadMetadata(
                         map["episodeName"],
                         map["podcastName"],
-                        map["imageUrl"]
+                        map["podcastImageUrl"]
                     )
                 }
                 "terminate" -> terminatePodcast()

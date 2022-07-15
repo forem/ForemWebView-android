@@ -118,6 +118,27 @@ class PodcastPlayerNotificationManager(
         }
     }
 
+    // ON WEB
+    // PLAY / PAUSE
+    // RATE
+    // SEEK
+    // MUTE
+    // TERMINATE
+
+    // POD APP
+    // PLAY / PAUSE
+    // REWIND
+    // FAST FORWARD
+    // TERMINATE
+    // SEEK
+
+    // FOREM APP
+    // PLAY / PAUSE
+    // REWIND
+    // FAST FORWARD
+    // TERMINATE
+    // SEEK
+
     override fun getActions(player: Player): List<String> {
         var stringActions: List<String> = ArrayList()
         stringActions += ACTION_REWIND
@@ -134,4 +155,6 @@ class PodcastPlayerNotificationManager(
         val state = player.playbackState
         return state != Player.STATE_ENDED && state != Player.STATE_IDLE && player.playWhenReady
     }
+
+
 }
