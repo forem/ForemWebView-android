@@ -3,6 +3,9 @@ plugins {
   id 'kotlin-android'
   id 'maven-publish'
 }
+ext{
+  version_name = "1.0.10"
+}
 
 android {
   compileSdk 31
@@ -11,10 +14,10 @@ android {
     minSdk 21
     targetSdk 31
     versionCode 10
-    versionName "1.0.10"
+    versionName "$version_name"
 
     buildConfigField("String", "ANDROID_BRIDGE", "\"AndroidBridge\"")
-    buildConfigField("String", "FOREM_AGENT_EXTENSION", "\"ForemWebView/1.0.10\"")
+    buildConfigField("String", "FOREM_AGENT_EXTENSION", "\"ForemWebView/$version_name\"")
     buildConfigField("String", "PASSPORT_AGENT_EXTENSION", "\"ForemWebView/passport\"")
   }
   buildTypes {
@@ -65,7 +68,7 @@ afterEvaluate {
 
         groupId = 'com.github.forem'
         artifactId = 'ForemWebView-android'
-        version = '1.0.10'
+        version = '$version_name'
       }
     }
   }
