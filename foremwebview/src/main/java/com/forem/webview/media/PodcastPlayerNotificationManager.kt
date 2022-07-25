@@ -119,14 +119,16 @@ class PodcastPlayerNotificationManager(
     }
 
     override fun getActions(player: Player): List<String> {
-        var stringActions: List<String> = ArrayList()
-        stringActions += ACTION_REWIND
-        stringActions += if (shouldShowPauseButton(player)) {
-            ACTION_PAUSE
-        } else {
-            ACTION_PLAY
-        }
-        stringActions += ACTION_FAST_FORWARD
+        val stringActions = ArrayList<String>()
+        stringActions.add(ACTION_REWIND)
+        stringActions.add(
+            if (shouldShowPauseButton(player)) {
+                ACTION_PAUSE
+            } else {
+                ACTION_PLAY
+            }
+        )
+        stringActions.add(ACTION_FAST_FORWARD)
         return stringActions
     }
 
