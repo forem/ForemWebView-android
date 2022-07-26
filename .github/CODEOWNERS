@@ -1,0 +1,9 @@
+# Reference: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+#####################################################################################
+#                                Global Code Owners                                 #
+#####################################################################################
+# These owners will be the default owners for everything in the repo.
+# Unless a later match takes precedence, @rt4914 will be requested for
+# review when someone opens a pull request.
+* @rt4914

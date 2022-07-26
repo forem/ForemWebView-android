@@ -15,6 +15,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
+import com.bumptech.glide.Glide
 import com.forem.webview.BuildConfig
 import com.forem.webview.R
 import com.google.android.exoplayer2.C
@@ -23,10 +24,12 @@ import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import java.util.concurrent.ExecutionException
 
 /**
  * Class which helps us play the podcasts in foreground as well as background.
@@ -52,10 +55,10 @@ class AudioService : LifecycleService() {
     }
 
     companion object {
-        private const val argPodcastUrl = "ARG_PODCAST_URL"
-        private const val playbackChannelId = "playback_channel"
-        private const val mediaSessionTag = "Forem"
-        private const val notificationId = 1
+        private const val PODCAST_URL_ARGUMENT_KEY = "AudioService.podcast_url"
+        private const val PLAYBACK_CHANNEL_ID = "playback_channel"
+        private const val MEDIA_SESSION_TAG = "Forem"
+        private const val NOTIFICATION_ID = 1
 
         /**
          * Creates a new intent which calls AudioService on main thread.
@@ -69,20 +72,18 @@ class AudioService : LifecycleService() {
             context: Context,
             episodeUrl: String
         ) = Intent(context, AudioService::class.java).apply {
-            putExtra(argPodcastUrl, episodeUrl)
+            putExtra(PODCAST_URL_ARGUMENT_KEY, episodeUrl)
         }
     }
 
     override fun onBind(intent: Intent): IBinder {
         super.onBind(intent)
 
-        val newPodcastUrl = intent.getStringExtra(argPodcastUrl)
-
+        val newPodcastUrl = intent.getStringExtra(PODCAST_URL_ARGUMENT_KEY)
         if (currentPodcastUrl != newPodcastUrl) {
             currentPodcastUrl = newPodcastUrl
             preparePlayer()
         }
-
         return binder
     }
 
@@ -99,10 +100,10 @@ class AudioService : LifecycleService() {
 
         playerNotificationManager = PodcastPlayerNotificationManager.createWithNotificationChannel(
             applicationContext,
-            playbackChannelId,
+            PLAYBACK_CHANNEL_ID,
             R.string.app_name,
             R.string.playback_channel_description,
-            notificationId,
+            NOTIFICATION_ID,
             object : PlayerNotificationManager.MediaDescriptionAdapter {
                 override fun getCurrentContentTitle(player: Player): String {
                     return episodeName ?: getString(R.string.app_name)
@@ -121,7 +122,28 @@ class AudioService : LifecycleService() {
                     player: Player,
                     callback: PlayerNotificationManager.BitmapCallback
                 ): Bitmap? {
-                    return null
+                    if (imageUrl == null) return null
+
+                    var largeIconBitmap: Bitmap? = null
+                    val thread = Thread {
+                        try {
+                            val uri = Uri.parse(imageUrl)
+                            val bitmap = Glide.with(applicationContext)
+                                .asBitmap()
+                                .load(uri)
+                                .submit().get()
+
+                            largeIconBitmap = bitmap
+                            callback.onBitmap(bitmap)
+                        } catch (e: ExecutionException) {
+                            e.printStackTrace()
+                        } catch (e: InterruptedException) {
+                            e.printStackTrace()
+                        }
+                    }
+                    thread.start()
+
+                    return largeIconBitmap
                 }
             },
             object : PlayerNotificationManager.NotificationListener {
@@ -136,6 +158,7 @@ class AudioService : LifecycleService() {
                     notificationId: Int,
                     dismissedByUser: Boolean
                 ) {
+                    // TODO: Handle onNotificationCancelled
                     stopSelf()
                 }
 
@@ -195,12 +218,18 @@ class AudioService : LifecycleService() {
             invalidate()
         }
 
+        val mediaMetadataCompat =
+            MediaMetadataCompat.Builder().putString(MediaMetadata.METADATA_KEY_TITLE, episodeName)
+                .putString(MediaMetadata.METADATA_KEY_ARTIST, podcastName)
+                .build()
+
         // Show lock screen controls and let apps like Google assistant manager playback.
-        mediaSession = MediaSessionCompat(this, mediaSessionTag)
-        val builder = MediaMetadataCompat.Builder()
-        builder.putString(MediaMetadata.METADATA_KEY_TITLE, episodeName)
-            .putString(MediaMetadata.METADATA_KEY_ARTIST, podcastName)
-        mediaSession?.setMetadata(builder.build())
+        mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG)
+        mediaSession?.isActive = true
+        mediaSession?.setMetadata(mediaMetadataCompat)
+        // Shows the duration and adds seek functionality to notification.
+        val mediaSessionConnector = MediaSessionConnector(mediaSession!!)
+        mediaSessionConnector.setPlayer(player)
         playerNotificationManager?.setMediaSessionToken(mediaSession!!.sessionToken)
     }
 
@@ -228,7 +257,9 @@ class AudioService : LifecycleService() {
     }
 
     fun clearNotification() {
+        playerNotificationManager?.setPlayer(null)
         player?.release()
+        player = null
     }
 
     /**
@@ -287,13 +318,13 @@ class AudioService : LifecycleService() {
      * This function helps to show the meta data of podcast in notification.
      *
      * @param episodeName the name of the episode which gets displayed in notification.
-     * @param pdName the name of the podcast which gets displayed in notification.
+     * @param podcastName the name of the podcast which gets displayed in notification.
      * @param url the image which needs to be displayed in the notification.
      */
     @MainThread
-    fun loadMetadata(epName: String?, pdName: String?, url: String?) {
-        episodeName = epName
-        podcastName = pdName
+    fun loadMetadata(episodeName: String?, podcastName: String?, url: String?) {
+        this.episodeName = episodeName
+        this.podcastName = podcastName
         imageUrl = url
     }
 

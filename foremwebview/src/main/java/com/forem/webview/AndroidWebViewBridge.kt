@@ -154,7 +154,7 @@ class AndroidWebViewBridge(
                     audioService?.loadMetadata(
                         map["episodeName"],
                         map["podcastName"],
-                        map["imageUrl"]
+                        map["podcastImageUrl"]
                     )
                 }
                 "terminate" -> terminatePodcast()
