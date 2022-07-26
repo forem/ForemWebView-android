@@ -68,7 +68,7 @@ afterEvaluate {
 
         groupId = 'com.github.forem'
         artifactId = 'ForemWebView-android'
-        version = '$version_name'
+        version = "$version_name"
       }
     }
   }
