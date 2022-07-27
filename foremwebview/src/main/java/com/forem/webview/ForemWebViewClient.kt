@@ -37,6 +37,12 @@ class ForemWebViewClient(
 
     private var baseUrl = ""
 
+    private var clearHistory = false
+
+    private var userId: Int = -1
+
+    private var token: String? = null
+
     init {
         setBaseUrl(originalUrl)
     }
@@ -49,12 +55,6 @@ class ForemWebViewClient(
     fun setBaseUrl(baseUrl: String) {
         this.baseUrl = baseUrl
     }
-
-    private var clearHistory = false
-
-    private var userId: Int = -1
-
-    private var token: String? = null
 
     /**
      * Function called via [AndroidWebViewBridge] when it successfully fetches the meta data of
@@ -97,6 +97,24 @@ class ForemWebViewClient(
      */
     fun clearHistory() {
         clearHistory = true
+    }
+
+    /**
+     * This function gets called from [AndroidWebViewBridge] whenever some information needs to be
+     * sent to the website from the android device.
+     *
+     * @param type can be either podcast of video.
+     * @param message contains the information along with actions which needs to be sent.
+     */
+    fun sendBridgeMessage(type: BridgeMessageType, message: Map<String, Any>) {
+        val payload = mutableMapOf<String, Any>()
+        payload.putAll(message)
+        payload["namespace"] = type.messageType
+        val jsonMessage = JSONObject(payload as Map<*, *>).toString()
+        val javascript = "window.ForemMobile?.injectJSMessage('$jsonMessage')"
+        webView.post {
+            webView.evaluateJavascript(javascript, null)
+        }
     }
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -256,24 +274,6 @@ class ForemWebViewClient(
             CustomTabsIntent.Builder()
                 .build()
                 .also { it.launchUrl(activity, Uri.parse(url)) }
-        }
-    }
-
-    /**
-     * This function gets called from [AndroidWebViewBridge] whenever some information needs to be
-     * sent to the website from the android device.
-     *
-     * @param type can be either podcast of video.
-     * @param message contains the information along with actions which needs to be sent.
-     */
-    fun sendBridgeMessage(type: BridgeMessageType, message: Map<String, Any>) {
-        val payload = mutableMapOf<String, Any>()
-        payload.putAll(message)
-        payload["namespace"] = type.messageType
-        val jsonMessage = JSONObject(payload as Map<*, *>).toString()
-        val javascript = "window.ForemMobile?.injectJSMessage('$jsonMessage')"
-        webView.post {
-            webView.evaluateJavascript(javascript, null)
         }
     }
 

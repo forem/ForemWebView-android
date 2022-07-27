@@ -3,4 +3,5 @@
   <string name="playback_channel_description">Podcast Player</string>
   <string name="send_email_with">Send email with…</string>
   <string name="select_picture">Select picture</string>
+  <string name="no_internet_connection">No internet connection</string>
 </resources>
