@@ -15,6 +15,26 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
+<!--  <FrameLayout-->
+<!--    android:id="@+id/loading_view_container"-->
+<!--    android:layout_width="0dp"-->
+<!--    android:layout_height="0dp"-->
+<!--    android:background="#33000000"-->
+<!--    android:visibility="gone"-->
+<!--    app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_container"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintTop_toTopOf="parent">-->
+
+<!--    <ProgressBar-->
+<!--      android:layout_width="96dp"-->
+<!--      android:layout_height="96dp"-->
+<!--      android:layout_gravity="center"-->
+<!--      android:background="@drawable/loading_view_rounded_background"-->
+<!--      android:indeterminateTint="#4CFCA7"-->
+<!--      android:padding="16dp" />-->
+<!--  </FrameLayout>-->
+
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/bottom_navigation_container"
     android:layout_width="0dp"
@@ -52,8 +72,8 @@
       android:id="@+id/forem_name_text_view"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_margin="8dp"
       android:gravity="end"
+      android:padding="8dp"
       android:textColor="@color/black"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"

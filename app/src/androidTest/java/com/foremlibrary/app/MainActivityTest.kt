@@ -63,13 +63,13 @@ class MainActivityTest {
     @Before
     fun setup() {
         Intents.init()
-        EspressoIdlingResource.increment()
+        // EspressoIdlingResource.increment()
     }
 
     @After
     fun tearDown() {
         Intents.release()
-        EspressoIdlingResource.decrement()
+        // EspressoIdlingResource.decrement()
     }
 
     @Test
@@ -219,6 +219,8 @@ class MainActivityTest {
     fun testMainActivity_loadMMALifeRemote_createAccount_signUpWithGoogle_urlOpensInOtherWebView() {
         launchActivity<MainActivity>(createMainActivityIntent(MMA_LIFE))
 
+        // onView(withId(R.id.loading_view_container)).perform(waitUntilGone(3000L))
+
         onWebView()
             .withElement(findElement(Locator.CLASS_NAME, "c-cta--branded"))
             .check(webMatches(getText(), containsString("Create account")))
@@ -347,6 +349,25 @@ class MainActivityTest {
 
         onView(withId(R.id.forem_name_text_view))
             .check(matches(withText(containsString("DEV"))))
+    }
+
+    @Test
+    fun testMainActivity_loadDevTo_loadingViewIsNotVisible() {
+        launchActivity<MainActivity>(createMainActivityIntent(DEV_TO))
+
+        // onView(withId(R.id.loading_view_container)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun testMainActivity_loadDevTo_clickOnForemName_loadingViewIsVisible() {
+        launchActivity<MainActivity>(createMainActivityIntent(DEV_TO))
+
+        onWebView()
+            .withElement(findElement(Locator.CLASS_NAME, "c-cta--branded"))
+            .check(webMatches(getText(), containsString("Create account")))
+
+        onView(withId(R.id.forem_name_text_view)).perform(click())
+        // onView(withId(R.id.loading_view_container)).check(matches(isDisplayed()))
     }
 
     private fun createMainActivityIntent(foremUrl: String): Intent {
