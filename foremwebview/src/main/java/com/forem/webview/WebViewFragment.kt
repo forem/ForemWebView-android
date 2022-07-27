@@ -15,8 +15,11 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Observer
+import com.forem.webview.utils.NetworkConnectionLiveData
 import java.net.URL
 
 /** Displays forem instance in a fragment. */
@@ -64,6 +67,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
 
     private var baseUrl = ""
 
+    private var noInternetConnectionContainer: FrameLayout? = null
     private var oauthWebViewContainer: FrameLayout? = null
     private var oauthWebView: WebView? = null
     private var webView: WebView? = null
@@ -87,6 +91,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
     ): View {
         val view = inflater.inflate(R.layout.web_view_fragment, container, false)
 
+        noInternetConnectionContainer = view.findViewById(R.id.no_internet_connection_container)
         webView = view.findViewById(R.id.web_view)
         oauthWebViewContainer = view.findViewById(R.id.oauth_web_view_container)
 
@@ -95,9 +100,34 @@ class WebViewFragment : Fragment(), FileChooserListener {
         val needsForemMetaData = args.getBoolean(NEEDS_FOREM_META_DATA)
         resultListenerKey = args.getString(RESULT_LISTENER_KEY)!!
 
+        noInternetConnectionContainer?.visibility = View.GONE
+
         setupWebView(baseUrl, needsForemMetaData)
+        setupNetworkObserver()
 
         return view
+    }
+
+    private fun setupNetworkObserver() {
+        NetworkConnectionLiveData(this.requireContext()).observe(
+            this.requireActivity(),
+            Observer { isConnected ->
+
+                // Reload the webview before removing the no-internet container.
+                if (noInternetConnectionContainer?.visibility == View.VISIBLE) {
+                    if (isConnected) {
+                        refresh()
+                    }
+                }
+
+                noInternetConnectionContainer?.visibility = if (isConnected) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+                return@Observer
+            }
+        )
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -330,7 +360,13 @@ class WebViewFragment : Fragment(), FileChooserListener {
      * Refreshes the current forem instance.
      */
     fun refresh() {
-        webView!!.reload()
+        if (webView != null && webView!!.isVisible) {
+            webView!!.reload()
+        }
+
+        if (oauthWebView != null && oauthWebView!!.isVisible) {
+            oauthWebView!!.reload()
+        }
     }
 
     private fun sendDataToFragmentResultListener(
