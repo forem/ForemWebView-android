@@ -18,8 +18,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.forem.webview.utils.NetworkConnectionLiveData
+import com.forem.webview.utils.WebViewStatus
 import java.net.URL
 
 /** Displays forem instance in a fragment. */
@@ -72,6 +74,9 @@ class WebViewFragment : Fragment(), FileChooserListener {
     private var oauthWebView: WebView? = null
     private var webView: WebView? = null
 
+    /** Provides an observable which can reflect the current status of WebView. */
+    val currentWebViewStatus = MutableLiveData(WebViewStatus.LOADING)
+
     private val imagePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data != null && result.data?.data != null) {
@@ -90,6 +95,8 @@ class WebViewFragment : Fragment(), FileChooserListener {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.web_view_fragment, container, false)
+
+        currentWebViewStatus.value = WebViewStatus.LOADING
 
         noInternetConnectionContainer = view.findViewById(R.id.no_internet_connection_container)
         webView = view.findViewById(R.id.web_view)
@@ -158,7 +165,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
                 )
             },
             onPageFinish = {
-                // Maybe hide loading screen here
+                currentWebViewStatus.value = WebViewStatus.SUCCESSFUL
             },
             loadOauthWebView = { url -> loadOauthWebView(url) },
             destroyOauthWebView = { destroyOauthWebView() },
@@ -349,6 +356,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
      */
     fun updateForemInstance(baseUrl: String) {
         if (::webViewClient.isInitialized) {
+            currentWebViewStatus.value = WebViewStatus.LOADING
             webViewClient.clearHistory()
             this.baseUrl = baseUrl
             webView?.loadUrl(baseUrl)
@@ -361,10 +369,12 @@ class WebViewFragment : Fragment(), FileChooserListener {
      */
     fun refresh() {
         if (webView != null && webView!!.isVisible) {
+            currentWebViewStatus.value = WebViewStatus.LOADING
             webView!!.reload()
         }
 
         if (oauthWebView != null && oauthWebView!!.isVisible) {
+            currentWebViewStatus.value = WebViewStatus.LOADING
             oauthWebView!!.reload()
         }
     }
