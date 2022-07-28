@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private var currentForem = DEV_TO
 
-    // private lateinit var loadingViewContainer: FrameLayout
+    private lateinit var loadingViewContainer: FrameLayout
     private lateinit var foremNameTextView: TextView
     private lateinit var backImageView: ImageView
     private lateinit var forwardImageView: ImageView
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             loadOrUpdateFragment(url)
         }
 
-        // loadingViewContainer = findViewById(R.id.loading_view_container)
+        loadingViewContainer = findViewById(R.id.loading_view_container)
         foremNameTextView = findViewById(R.id.forem_name_text_view)
         backImageView = findViewById(R.id.back_image_view)
         forwardImageView = findViewById(R.id.forward_image_view)
@@ -121,13 +121,13 @@ class MainActivity : AppCompatActivity() {
             ).commit()
 
             // Used to observe the current status of webview.
-//            webViewFragment.currentWebViewStatus.observe(this) { webViewStatus ->
-//                if (webViewStatus == WebViewStatus.LOADING) {
-//                    loadingViewContainer.visibility = View.VISIBLE
-//                } else {
-//                    loadingViewContainer.visibility = View.GONE
-//                }
-//            }
+            webViewFragment.currentWebViewStatus.observe(this) { webViewStatus ->
+                if (webViewStatus == WebViewStatus.LOADING) {
+                    loadingViewContainer.visibility = View.VISIBLE
+                } else {
+                    loadingViewContainer.visibility = View.GONE
+                }
+            }
         } else {
             getWebViewFragment()?.updateForemInstance(url)
         }
