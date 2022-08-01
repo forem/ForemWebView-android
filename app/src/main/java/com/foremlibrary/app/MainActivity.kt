@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var currentForem = DEV_TO
+    private var currentForem = "https://d8c4-103-233-123-103.in.ngrok.io/"
 
     private lateinit var loadingViewContainer: FrameLayout
     private lateinit var foremNameTextView: TextView

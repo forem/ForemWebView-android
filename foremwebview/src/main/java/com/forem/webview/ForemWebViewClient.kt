@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.MailTo
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
@@ -15,7 +16,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONObject
 import java.net.URL
-import java.util.Locale
+import java.util.*
 
 /**
  * Class which extends WebViewClient to override all functions and implement custom functionalities

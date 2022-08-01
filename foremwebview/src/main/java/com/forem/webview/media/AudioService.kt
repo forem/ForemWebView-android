@@ -11,6 +11,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
@@ -47,6 +48,8 @@ class AudioService : LifecycleService() {
     private var player: SimpleExoPlayer? = null
     private var playerNotificationManager: PlayerNotificationManager? = null
     private var mediaSession: MediaSessionCompat? = null
+
+    private lateinit var notificationReceiver:NotificationReceiver
 
     /** Binder to use AudioService. */
     inner class AudioServiceBinder : Binder() {
@@ -89,6 +92,9 @@ class AudioService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
+
+        val notificationReceiver = NotificationReceiver()
+        registerReceiver(notificationReceiver, NotificationReceiver.intentFilter)
 
         player = SimpleExoPlayer.Builder(this).build()
         val audioAttributes = AudioAttributes.Builder()
@@ -158,7 +164,9 @@ class AudioService : LifecycleService() {
                     notificationId: Int,
                     dismissedByUser: Boolean
                 ) {
+                    Log.d("TAGG","onNotificationCancelled")
                     // TODO: Handle onNotificationCancelled
+                    unregisterNotificationBroadcastReceiver()
                     stopSelf()
                 }
 
@@ -233,6 +241,11 @@ class AudioService : LifecycleService() {
         playerNotificationManager?.setMediaSessionToken(mediaSession!!.sessionToken)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterNotificationBroadcastReceiver()
+    }
+
     /**
      * Plays the podcast on main thread.
      *
@@ -257,6 +270,7 @@ class AudioService : LifecycleService() {
     }
 
     fun clearNotification() {
+        unregisterNotificationBroadcastReceiver()
         playerNotificationManager?.setPlayer(null)
         player?.release()
         player = null
@@ -361,5 +375,12 @@ class AudioService : LifecycleService() {
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory, extractorsFactory)
             .createMediaSource(MediaItem.fromUri(streamUri))
         player?.prepare(mediaSource)
+    }
+
+    private fun unregisterNotificationBroadcastReceiver(){
+        Log.d("TAGG","unregisterNotificationBroadcastReceiver")
+        if(::notificationReceiver.isInitialized){
+            unregisterReceiver(notificationReceiver)
+        }
     }
 }

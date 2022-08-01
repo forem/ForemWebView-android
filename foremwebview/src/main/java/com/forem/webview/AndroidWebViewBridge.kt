@@ -293,6 +293,13 @@ class AndroidWebViewBridge(
         webViewClient.sendBridgeMessage(BridgeMessageType.VIDEO, mapOf("action" to "pause"))
     }
 
+    /**
+     * Helps in sending the information to webview that the podcast has been paused.
+     */
+    fun podcastPaused() {
+        webViewClient.sendBridgeMessage(BridgeMessageType.PODCAST, mapOf("action" to "pause"))
+    }
+
     inner class PodcastTimeUpdate : TimerTask() {
         override fun run() {
             context.runOnUiThread {

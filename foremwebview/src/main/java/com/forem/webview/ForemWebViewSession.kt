@@ -48,4 +48,13 @@ class ForemWebViewSession {
         }
         androidWebViewBridge?.updateTimer(seconds)
     }
+
+    /** Gets called whenever the podcast gets paused. */
+    fun podcastPaused() {
+        Log.d("TAGG","ForemWebViewSession: podcastPaused")
+        if (androidWebViewBridge == null) {
+            Log.e("ForemWebViewSession", "podcastPaused: androidWebViewBridge is null")
+        }
+        androidWebViewBridge?.podcastPaused()
+    }
 }
