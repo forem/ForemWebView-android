@@ -25,7 +25,7 @@ class ForemWebChromeClient(
         return false
     }
 
-    private fun openCustomTab(context:Context?, url: String) {
+    private fun openCustomTab(context: Context?, url: String) {
         if (context != null) {
             CustomTabsIntent.Builder()
                 .build()

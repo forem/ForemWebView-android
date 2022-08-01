@@ -48,19 +48,6 @@ class AndroidWebViewBridge(
     }
 
     /**
-     * Function which gets called once the webview has fully loaded a valid forem instance which
-     * contains the details of forem like name, logo, etc.
-     *
-     * @param foremMetaDataJsonObject an object which contains meta data of forem.
-     */
-    @JavascriptInterface
-    fun processForemMetaData(foremMetaDataJsonObject: String) {
-        var foremMetaDataMap: Map<String, String> = HashMap()
-        foremMetaDataMap = Gson().fromJson(foremMetaDataJsonObject, foremMetaDataMap.javaClass)
-        webViewClient.foremMetaDataReceived(foremMetaDataMap)
-    }
-
-    /**
      * Function which gets called by website when an error occurs.
      *
      * @param errorTag tag required for log message.

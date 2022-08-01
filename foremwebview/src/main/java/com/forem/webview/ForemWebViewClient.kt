@@ -14,6 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.browser.customtabs.CustomTabsIntent
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import org.json.JSONObject
 import java.net.URL
 import java.util.*
@@ -44,6 +45,8 @@ class ForemWebViewClient(
 
     private var token: String? = null
 
+    private var foremMetaDataResult: String? = null
+
     init {
         setBaseUrl(originalUrl)
     }
@@ -55,24 +58,6 @@ class ForemWebViewClient(
      */
     fun setBaseUrl(baseUrl: String) {
         this.baseUrl = baseUrl
-    }
-
-    /**
-     * Function called via [AndroidWebViewBridge] when it successfully fetches the meta data of
-     * forem instance.
-     *
-     * @param foremMetaDataMap is a map of forem related meta data.
-     */
-    fun foremMetaDataReceived(foremMetaDataMap: Map<String, String>) {
-        if (UrlChecks.checkUrlIsCorrect(baseUrl)) {
-            val host = URL(baseUrl).host
-            val foremHomePageUrl = UrlChecks.checkAndAppendHttpsToUrl(host)
-            updateForemData(
-                foremHomePageUrl,
-                foremMetaDataMap["title"] ?: "",
-                foremMetaDataMap["logo"] ?: ""
-            )
-        }
     }
 
     /**
@@ -130,33 +115,8 @@ class ForemWebViewClient(
         onPageFinish()
         view.visibility = View.VISIBLE
 
-        if (needsForemMetaData) {
-            // This javascript function triggers the [processForemMetaData] function in
-            // [AndroidWebViewBridge]. This is needed to get the forem name and logo.
-            val fetchMetaDataJSFunction =
-                """
-                    javascript:window.${BuildConfig.ANDROID_BRIDGE}.processForemMetaData((
-                    function (){
-                        var metas = document.getElementsByTagName('meta');
-                        let foremMetaData = new Map();
-                        for (var i=0; i<metas.length; i++) {
-                            if (metas[i].getAttribute("property") == "forem:name") {
-                                let title = metas[i].getAttribute("content");
-                                foremMetaData.set("title", title);
-                            }
-                            else if (metas[i].getAttribute("property") == "forem:logo") {
-                                let logo = metas[i].getAttribute("content");
-                                foremMetaData.set("logo", logo);
-                            }
-                        }
-                        var obj = Object.fromEntries(foremMetaData);
-                        var jsonString = JSON.stringify(obj);
-                        return jsonString;
-                    }
-                    )() );
-                """.trimIndent()
-
-            view.loadUrl(fetchMetaDataJSFunction)
+        if (needsForemMetaData && foremMetaDataResult == null) {
+            getInstanceMetadata()
         }
         super.onPageFinished(view, url)
     }
@@ -169,6 +129,42 @@ class ForemWebViewClient(
                     registerDevice()
                 }
             }
+        }
+    }
+
+    private fun getInstanceMetadata() {
+        val javascript = "window.ForemMobile?.getInstanceMetadata()"
+        webView.post {
+            webView.evaluateJavascript(javascript) {
+                if (!it.isNullOrEmpty() && !it.equals("null")) {
+                    foremMetaDataResult = it
+                    processForemMetaData(it)
+                }
+                return@evaluateJavascript
+            }
+        }
+    }
+
+    private fun processForemMetaData(metaDataJSONStribg: String) {
+        val foremMetaData = metaDataJSONStribg
+            .replace("\"{", "{")
+            .replace("}\"", "}")
+            .replace("\\\"", "\"")
+        val jsonObject = JSONObject(foremMetaData)
+        var foremMetaDataMap: Map<String, String> = HashMap()
+        foremMetaDataMap = Gson().fromJson(jsonObject.toString(), foremMetaDataMap.javaClass)
+        foremMetaDataReceived(foremMetaDataMap)
+    }
+
+    private fun foremMetaDataReceived(foremMetaDataMap: Map<String, String>) {
+        if (UrlChecks.checkUrlIsCorrect(baseUrl)) {
+            val host = URL(baseUrl).host
+            val foremHomePageUrl = UrlChecks.checkAndAppendHttpsToUrl(host)
+            updateForemData(
+                foremHomePageUrl,
+                foremMetaDataMap["name"] ?: "",
+                foremMetaDataMap["logo"] ?: ""
+            )
         }
     }
 
