@@ -179,8 +179,8 @@ class WebViewFragment : Fragment(), FileChooserListener {
         webViewBridge = AndroidWebViewBridge(this.requireActivity(), webViewClient)
         webView!!.addJavascriptInterface(webViewBridge, BuildConfig.ANDROID_BRIDGE)
 
-        foremWebViewSession = ForemWebViewSession().getInstance()!!
-        foremWebViewSession.androidWebViewBridge = webViewBridge
+        foremWebViewSession = ForemWebViewSession.getInstance()
+        foremWebViewSession.setAndroidWebViewBridge(webViewBridge)
 
         // WebView Chrome Client
         webView!!.webChromeClient = ForemWebChromeClient(fileChooserListener = this)
