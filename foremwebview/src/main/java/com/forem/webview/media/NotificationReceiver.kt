@@ -23,13 +23,7 @@ class NotificationReceiver : BroadcastReceiver() {
     private lateinit var foremWebViewSession: ForemWebViewSession
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val foremWebViewSessionInstance = ForemWebViewSession().getInstance()
-        if (foremWebViewSessionInstance == null) {
-            Log.d("TAGG", "onReceive: foremWebViewSessionInstance: null")
-            return
-        } else {
-            foremWebViewSession = foremWebViewSessionInstance
-        }
+        foremWebViewSession = ForemWebViewSession.getInstance()
 
         when (intent?.action) {
             PlayerNotificationManager.ACTION_PLAY -> {

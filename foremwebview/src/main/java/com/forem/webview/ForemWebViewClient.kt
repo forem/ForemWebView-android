@@ -97,6 +97,7 @@ class ForemWebViewClient(
         payload.putAll(message)
         payload["namespace"] = type.messageType
         val jsonMessage = JSONObject(payload as Map<*, *>).toString()
+        Log.d("TAG", "sendBridgeMessage: $jsonMessage")
         val javascript = "window.ForemMobile?.injectJSMessage('$jsonMessage')"
         webView.post {
             webView.evaluateJavascript(javascript, null)

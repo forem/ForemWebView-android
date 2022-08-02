@@ -284,6 +284,7 @@ class AndroidWebViewBridge(
      * Helps in sending the information to webview that the podcast has been paused.
      */
     fun podcastPaused() {
+        Log.d("TAGG","AndroidWebViewBdirge: podcastPaused")
         webViewClient.sendBridgeMessage(BridgeMessageType.PODCAST, mapOf("action" to "pause"))
     }
 
