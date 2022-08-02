@@ -6,27 +6,27 @@ import android.util.Log
  * Helper class to play and pause video in [VideoPlayerActivity] and send that information to
  * website.
  */
-class ForemWebViewSession {
+class ForemWebViewSession private constructor() {
 
-    /** The [AndroidWebViewBridge] instance required to call javascript interface functions. */
-    var androidWebViewBridge: AndroidWebViewBridge? = null
+    companion object {
+        @Volatile
+        private lateinit var instance: ForemWebViewSession
 
-    private var instance: ForemWebViewSession? = null
-
-    /**
-     * Function which creates a new instance of this class or shares the old instance.
-     *
-     * @return instance of [ForemWebViewSession].
-     */
-    fun getInstance(): ForemWebViewSession? {
-        if (instance == null) {
-            synchronized(ForemWebViewSession::class.java) {
-                if (instance == null) {
+        /** Returns the single instance of [ForemWebViewSession]. */
+        fun getInstance(): ForemWebViewSession {
+            synchronized(this) {
+                if (!::instance.isInitialized) {
                     instance = ForemWebViewSession()
                 }
+                return instance
             }
         }
-        return instance
+    }
+
+    private var androidWebViewBridge: AndroidWebViewBridge? = null
+
+    fun setAndroidWebViewBridge(androidWebViewBridge: AndroidWebViewBridge) {
+        this.androidWebViewBridge = androidWebViewBridge
     }
 
     /** Gets called whenever the video gets paused or the [VideoPlayerActivity] is destroyed. */

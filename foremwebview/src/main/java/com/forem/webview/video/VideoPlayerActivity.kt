@@ -29,7 +29,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         /**
          * Creates a new instance of intent for [VideoPlayerActivity].
          *
-         * @param content the source activity context.
+         * @param context the source activity context.
          * @param url the video which needs to be played.
          * @param time the time at video the video should start from.
          * @return the intent for [VideoPlayerActivity] with extras.
@@ -47,7 +47,9 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
     private lateinit var player: SimpleExoPlayer
     private val timer = Timer()
 
-    private lateinit var foremWebViewSession: ForemWebViewSession
+    private val foremWebViewSession: ForemWebViewSession by lazy {
+        ForemWebViewSession.getInstance()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,14 +61,6 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         );
 
         setContentView(R.layout.video_player_activity)
-
-        val foremWebViewSessionInstance = ForemWebViewSession().getInstance()
-        if (foremWebViewSessionInstance == null) {
-            finish()
-            return
-        } else {
-            foremWebViewSession = foremWebViewSessionInstance
-        }
 
         val playerView = findViewById<PlayerView>(R.id.player_view)
 
