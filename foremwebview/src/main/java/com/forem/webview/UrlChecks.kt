@@ -33,8 +33,6 @@ object UrlChecks {
      */
     @SuppressLint("DefaultLocale")
     fun getURLType(url: String, host: String): UrlType {
-        // TODO(#178): Special case- if URL is is https://m.facebook.com/ and host is www.facebook.com
-        //  the result is THIRD_PARTY_LINK but instead is should be HOST_LINK.
         return if (checkUrlIsCorrect(url)) {
             when {
                 URL(url).host.lowercase(Locale.getDefault()).contains(host.lowercase(Locale.getDefault())) -> {
