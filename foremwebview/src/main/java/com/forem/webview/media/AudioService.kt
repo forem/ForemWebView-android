@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import com.bumptech.glide.Glide
 import com.forem.webview.BuildConfig
+import com.forem.webview.ForemWebViewSession
 import com.forem.webview.R
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
@@ -49,7 +50,7 @@ class AudioService : LifecycleService() {
     private var playerNotificationManager: PlayerNotificationManager? = null
     private var mediaSession: MediaSessionCompat? = null
 
-    private lateinit var notificationReceiver:NotificationReceiver
+    private lateinit var notificationReceiver: NotificationReceiver
 
     /** Binder to use AudioService. */
     inner class AudioServiceBinder : Binder() {
@@ -93,7 +94,7 @@ class AudioService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        val notificationReceiver = NotificationReceiver()
+        notificationReceiver = NotificationReceiver()
         registerReceiver(notificationReceiver, NotificationReceiver.intentFilter)
 
         player = SimpleExoPlayer.Builder(this).build()
@@ -164,8 +165,6 @@ class AudioService : LifecycleService() {
                     notificationId: Int,
                     dismissedByUser: Boolean
                 ) {
-                    Log.d("TAGG","onNotificationCancelled")
-                    // TODO: Handle onNotificationCancelled
                     unregisterNotificationBroadcastReceiver()
                     stopSelf()
                 }
@@ -377,10 +376,13 @@ class AudioService : LifecycleService() {
         player?.prepare(mediaSource)
     }
 
-    private fun unregisterNotificationBroadcastReceiver(){
-        Log.d("TAGG","unregisterNotificationBroadcastReceiver")
-        if(::notificationReceiver.isInitialized){
-            unregisterReceiver(notificationReceiver)
+    private fun unregisterNotificationBroadcastReceiver() {
+        if (::notificationReceiver.isInitialized) {
+            try {
+                unregisterReceiver(notificationReceiver)
+            } catch (e: Exception) {
+                // already unregistered
+            }
         }
     }
 }
