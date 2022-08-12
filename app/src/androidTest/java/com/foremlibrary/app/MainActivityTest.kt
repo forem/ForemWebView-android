@@ -48,7 +48,6 @@ private const val DEV_LOCAL_1 = "file:///android_asset/forem.dev.html"
 private const val ACCOUNTS_FOREM_URL = "https://account.forem.com"
 private const val DEV_TO = "https://dev.to"
 private const val MMA_LIFE = "https://www.thismmalife.com/"
-private const val DEV_TO_CONTACT = "https://dev.to/contact"
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
@@ -290,7 +289,7 @@ class MainActivityTest {
 
     @Test
     fun testMainActivity_loadDevToRemote_clickOnEmail_opensEmailIntent() {
-        launchActivity<MainActivity>(createMainActivityIntent(DEV_TO_CONTACT))
+        launchActivity<MainActivity>(createMainActivityIntent(DEV_LOCAL_1))
 
         onWebView()
             .withElement(findElement(Locator.LINK_TEXT, "yo@dev.to"))
