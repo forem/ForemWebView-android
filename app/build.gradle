@@ -14,6 +14,8 @@ android {
     versionName "1.0"
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    // https://developer.android.com/training/testing/junit-runner#ato-gradle
+    testInstrumentationRunnerArguments clearPackageData: 'true'
   }
 
   buildTypes {
@@ -29,6 +31,11 @@ android {
   }
   kotlinOptions {
     jvmTarget = '1.8'
+  }
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
+    }
   }
 }
 
@@ -54,4 +61,13 @@ dependencies {
   androidTestImplementation 'androidx.test:runner:1.4.0'
   androidTestImplementation "com.google.truth:truth:1.1.3"
   androidTestImplementation "junit:junit:4.13.2"
+
+  testImplementation(
+      'androidx.test.espresso:espresso-contrib:3.1.0',
+      'androidx.test.espresso:espresso-core:3.2.0',
+      'androidx.test.espresso:espresso-intents:3.1.0',
+      'androidx.test.ext:junit:1.1.1',
+      'com.google.truth:truth:1.1.3',
+      'org.robolectric:robolectric:4.5',
+  )
 }
