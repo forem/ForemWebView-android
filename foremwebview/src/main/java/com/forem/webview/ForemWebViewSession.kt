@@ -1,7 +1,5 @@
 package com.forem.webview
 
-import android.util.Log
-
 /**
  * Helper class to play and pause video in [VideoPlayerActivity] and send that information to
  * website.
@@ -31,9 +29,6 @@ class ForemWebViewSession private constructor() {
 
     /** Gets called whenever the video gets paused or the [VideoPlayerActivity] is destroyed. */
     fun videoPlayerPaused() {
-        if (androidWebViewBridge == null) {
-            Log.e("ForemWebViewSession", "videoPlayerPaused: androidWebViewBridge is null")
-        }
         androidWebViewBridge?.videoPlayerPaused()
     }
 
@@ -43,9 +38,16 @@ class ForemWebViewSession private constructor() {
      * @return seconds at which the video is at currently.
      */
     fun videoPlayerTimerUpdate(seconds: String) {
-        if (androidWebViewBridge == null) {
-            Log.e("ForemWebViewSession", "videoPlayerTimerUpdate: androidWebViewBridge is null")
-        }
         androidWebViewBridge?.updateTimer(seconds)
+    }
+
+    /** Gets called whenever the podcast gets played. */
+    fun podcastPlayed() {
+        androidWebViewBridge?.podcastPlayed()
+    }
+
+    /** Gets called whenever the podcast gets paused. */
+    fun podcastPaused() {
+        androidWebViewBridge?.podcastPaused()
     }
 }

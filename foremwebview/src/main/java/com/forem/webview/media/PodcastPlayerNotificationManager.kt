@@ -98,6 +98,7 @@ class PodcastPlayerNotificationManager(
                 channelDescription,
                 NotificationUtil.IMPORTANCE_LOW
             )
+
             return PodcastPlayerNotificationManager(
                 context,
                 channelId,

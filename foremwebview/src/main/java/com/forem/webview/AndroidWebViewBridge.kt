@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.forem.webview.media.AudioService
@@ -55,7 +54,6 @@ class AndroidWebViewBridge(
      */
     @JavascriptInterface
     fun logError(errorTag: String, errorMessage: String) {
-        Log.e(errorTag, errorMessage)
     }
 
     /**
@@ -167,17 +165,6 @@ class AndroidWebViewBridge(
         timer?.schedule(PodcastTimeUpdate(), 0, 1000)
     }
 
-    private fun terminatePodcast() {
-        timer?.cancel()
-        timer = null
-        audioService?.let {
-            it.clearNotification()
-            context.unbindService(connection)
-            context.stopService(Intent(context, AudioService::class.java))
-            audioService = null
-        }
-    }
-
     private fun podcastTimeUpdate() {
         audioService?.let {
             val time = it.currentTimeInSec() / 1000
@@ -278,6 +265,31 @@ class AndroidWebViewBridge(
      */
     fun videoPlayerPaused() {
         webViewClient.sendBridgeMessage(BridgeMessageType.VIDEO, mapOf("action" to "pause"))
+    }
+
+    /**
+     * Helps in sending the information to webview that the podcast is played.
+     */
+    fun podcastPlayed() {
+        webViewClient.sendBridgeMessage(BridgeMessageType.PODCAST, mapOf("action" to "play"))
+    }
+
+    /**
+     * Helps in sending the information to webview that the podcast has been paused.
+     */
+    fun podcastPaused() {
+        webViewClient.sendBridgeMessage(BridgeMessageType.PODCAST, mapOf("action" to "pause"))
+    }
+
+    private fun terminatePodcast() {
+        timer?.cancel()
+        timer = null
+        audioService?.let {
+            it.clearNotification()
+            context.unbindService(connection)
+            context.stopService(Intent(context, AudioService::class.java))
+            audioService = null
+        }
     }
 
     inner class PodcastTimeUpdate : TimerTask() {
