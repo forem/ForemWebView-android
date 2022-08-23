@@ -60,6 +60,8 @@ allprojects {
 4.  Push to the branch: `git push origin feature/that-new-feature`
 5.  Create a pull request for your branch 🎉
 
+You can find additional project related resources on [wiki-page](https://github.com/forem/ForemWebView-android/wiki).
+
 ## Contributions
 
 We expect contributors to abide by our underlying [code of conduct](./CODE_OF_CONDUCT.md). All conversations and discussions on GitHub (issues, pull requests, etc.) must be respectful and harassment-free.
