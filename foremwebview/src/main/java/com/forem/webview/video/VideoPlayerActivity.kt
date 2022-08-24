@@ -127,7 +127,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         pictureInPictureMode()
     }
 
-    // https://www.techotopia.com/index.php/An_Android_Picture-in-Picture_Tutorial
+    // Reference: https://www.techotopia.com/index.php/An_Android_Picture-in-Picture_Tutorial
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean
     ) {
@@ -139,7 +139,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
-    // https://stackoverflow.com/a/72392781
+    // Reference: https://stackoverflow.com/a/72392781
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration?
