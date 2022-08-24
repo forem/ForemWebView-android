@@ -1,12 +1,18 @@
 package com.forem.webview.video
 
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Rect
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Rational
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import com.forem.webview.ForemWebViewSession
 import com.forem.webview.R
 import com.google.android.exoplayer2.MediaItem
@@ -15,9 +21,10 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
 
-/** Activity which displays video using [ExoPlayer] on top of [WebViewFragment]. */
+/** Activity which displays video using ExoPlayer on top of WebViewFragment. */
 class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
 
     // TODO(#37): Implement picture-in-picture
@@ -44,8 +51,11 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         }
     }
 
+    private lateinit var playerView: PlayerView
     private lateinit var player: SimpleExoPlayer
     private val timer = Timer()
+
+    private var pictureInPictureParamsBuilder: PictureInPictureParams.Builder? = null
 
     private val foremWebViewSession: ForemWebViewSession by lazy {
         ForemWebViewSession.getInstance()
@@ -58,14 +68,34 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
         this.window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
-        );
+        )
 
         setContentView(R.layout.video_player_activity)
 
-        val playerView = findViewById<PlayerView>(R.id.player_view)
+        playerView = findViewById(R.id.player_view)
 
         val url = intent.getStringExtra(VIDEO_URL_INTENT_EXTRA)
         val time = intent.getStringExtra(VIDEO_TIME_INTENT_EXTRA)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
+            val aspectRatio = Rational(16, 9)
+            pictureInPictureParamsBuilder!!.setAspectRatio(aspectRatio)
+            playerView.addOnLayoutChangeListener { _, left, top, right, bottom,
+                                                   oldLeft, oldTop, oldRight, oldBottom ->
+                if (left != oldLeft || right != oldRight || top != oldTop
+                    || bottom != oldBottom && pictureInPictureParamsBuilder != null
+                ) {
+                    val sourceRectHint = Rect()
+                    playerView.getGlobalVisibleRect(sourceRectHint)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        setPictureInPictureParams(
+                            pictureInPictureParamsBuilder!!.build()
+                        )
+                    }
+                }
+            }
+        }
 
         val streamUri = Uri.parse(url)
         val mediaSource = HlsMediaSource.Factory(DefaultHttpDataSource.Factory())
@@ -81,20 +111,66 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
     }
 
     override fun onPause() {
-        if (::player.isInitialized) {
-            player.pause()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || !isInPictureInPictureMode) {
+            pauseVideo()
         }
-        foremWebViewSession.videoPlayerPaused()
         super.onPause()
     }
 
     override fun onDestroy() {
+        destroyVideo()
+        super.onDestroy()
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        pictureInPictureMode()
+    }
+
+    // https://www.techotopia.com/index.php/An_Android_Picture-in-Picture_Tutorial
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean
+    ) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode)
+        if (isInPictureInPictureMode) {
+            playerView.hideController()
+        } else {
+            playerView.showController()
+        }
+    }
+
+    // https://stackoverflow.com/a/72392781
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration?
+    ) {
+        if (lifecycle.currentState == Lifecycle.State.CREATED) {
+            // User clicked on close button of PiP window
+            destroyVideo()
+            finishAndRemoveTask()
+        }
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+    }
+
+    private fun pictureInPictureMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            enterPictureInPictureMode(pictureInPictureParamsBuilder!!.build())
+        }
+    }
+
+    private fun pauseVideo() {
+        if (::player.isInitialized) {
+            player.pause()
+        }
+        foremWebViewSession.videoPlayerPaused()
+    }
+
+    private fun destroyVideo() {
         if (::player.isInitialized) {
             player.playWhenReady = false
         }
         timer.cancel()
         foremWebViewSession.videoPlayerPaused()
-        super.onDestroy()
     }
 
     private fun timeUpdate() {
