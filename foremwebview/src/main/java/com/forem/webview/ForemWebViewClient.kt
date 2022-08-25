@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.MailTo
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
@@ -97,7 +96,6 @@ class ForemWebViewClient(
         payload.putAll(message)
         payload["namespace"] = type.messageType
         val jsonMessage = JSONObject(payload as Map<*, *>).toString()
-        Log.d("TAG", "sendBridgeMessage: $jsonMessage")
         val javascript = "window.ForemMobile?.injectJSMessage('$jsonMessage')"
         webView.post {
             webView.evaluateJavascript(javascript, null)

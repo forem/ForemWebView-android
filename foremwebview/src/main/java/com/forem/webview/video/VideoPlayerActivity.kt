@@ -27,8 +27,6 @@ import java.util.TimerTask
 /** Activity which displays video using ExoPlayer on top of WebViewFragment. */
 class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
 
-    // TODO(#37): Implement picture-in-picture
-    // TODO(#176): Transition from portrait to landscape results in video restart.
     companion object {
         const val VIDEO_URL_INTENT_EXTRA = "VideoPlayerActivity.video_url"
         const val VIDEO_TIME_INTENT_EXTRA = "VideoPlayerActivity.video_time"
