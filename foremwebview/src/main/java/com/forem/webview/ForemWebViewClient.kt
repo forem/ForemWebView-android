@@ -279,7 +279,6 @@ class ForemWebViewClient(
         body: String?,
         cc: String?
     ): Intent {
-
         val intent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", address, null))
         intent.putExtra(Intent.EXTRA_SUBJECT, subject)
         intent.putExtra(Intent.EXTRA_TEXT, body)

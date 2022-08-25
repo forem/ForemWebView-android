@@ -11,14 +11,12 @@ import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import com.bumptech.glide.Glide
 import com.forem.webview.BuildConfig
-import com.forem.webview.ForemWebViewSession
 import com.forem.webview.R
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem

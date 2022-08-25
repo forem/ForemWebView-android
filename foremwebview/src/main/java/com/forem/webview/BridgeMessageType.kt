@@ -4,6 +4,7 @@ package com.forem.webview
 enum class BridgeMessageType(val messageType: String) {
     /** PODCAST enum. */
     PODCAST("podcast"),
+
     /** VIDEO enum. */
     VIDEO("video")
 }
