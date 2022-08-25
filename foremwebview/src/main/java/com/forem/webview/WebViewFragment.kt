@@ -141,10 +141,11 @@ class WebViewFragment : Fragment(), FileChooserListener {
     private fun setupWebView(baseUrl: String, needsForemMetaData: Boolean) {
         // User Agent
         val defaultUserAgent = webView!!.settings.userAgentString
-        val extensionUserAgent = if (baseUrl != WebViewConstants.PASSPORT_URL)
+        val extensionUserAgent = if (baseUrl != WebViewConstants.PASSPORT_URL) {
             BuildConfig.FOREM_AGENT_EXTENSION
-        else
+        } else {
             BuildConfig.PASSPORT_AGENT_EXTENSION
+        }
 
         webView!!.loadUrl(baseUrl)
 
@@ -161,7 +162,9 @@ class WebViewFragment : Fragment(), FileChooserListener {
             needsForemMetaData = needsForemMetaData,
             updateForemData = { foremUrl, title, logo ->
                 sendForemMetaDataToFragmentResultListener(
-                    foremUrl, title, logo
+                    foremUrl,
+                    title,
+                    logo
                 )
             },
             onPageFinish = {
@@ -384,7 +387,6 @@ class WebViewFragment : Fragment(), FileChooserListener {
         canGoBack: Boolean = false,
         canGoForward: Boolean = false
     ) {
-
         // Note: This fragmentManager check is needed to fix the following error:
         // java.lang.IllegalStateException: Fragment not associated with a fragment manager.
         // Steps to reproduce this error:

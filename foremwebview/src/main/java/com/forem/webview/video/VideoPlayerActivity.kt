@@ -79,10 +79,9 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
             pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
             val aspectRatio = Rational(16, 9)
             pictureInPictureParamsBuilder!!.setAspectRatio(aspectRatio)
-            playerView.addOnLayoutChangeListener { _, left, top, right, bottom,
-                                                   oldLeft, oldTop, oldRight, oldBottom ->
-                if (left != oldLeft || right != oldRight || top != oldTop
-                    || bottom != oldBottom && pictureInPictureParamsBuilder != null
+            playerView.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                if (left != oldLeft || right != oldRight || top != oldTop ||
+                    bottom != oldBottom && pictureInPictureParamsBuilder != null
                 ) {
                     val sourceRectHint = Rect()
                     playerView.getGlobalVisibleRect(sourceRectHint)

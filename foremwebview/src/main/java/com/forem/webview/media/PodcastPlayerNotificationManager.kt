@@ -90,7 +90,6 @@ class PodcastPlayerNotificationManager(
             nextActionIconResourceId: Int,
             groupKey: String?
         ): PodcastPlayerNotificationManager {
-
             NotificationUtil.createNotificationChannel(
                 context,
                 channelId,
