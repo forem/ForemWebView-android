@@ -36,8 +36,8 @@ class AndroidWebViewBridge(
             val binder = service as AudioService.AudioServiceBinder
             audioService = binder.service
             // Once the audio service is bind-ed, execute all pending actions.
-            pendingPodcastActionsQueue.forEach {
-                podcastMessage(it)
+            for(action in pendingPodcastActionsQueue){
+                podcastMessage(action)
             }
         }
 
