@@ -31,8 +31,14 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.Until
 import com.forem.webview.video.VideoPlayerActivity
 import com.foremlibrary.app.testing.EspressoIdlingResource
+import com.google.common.truth.Truth.assertThat
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
@@ -54,20 +60,31 @@ class MainActivityTest {
 
     private val context: Context = getInstrumentation().targetContext
 
+    // Reference: https://proandroiddev.com/the-definitive-guide-of-android-ui-automator-with-kotlin-2eab40edab0d
+    private val device: UiDevice
+
+    init {
+        val instrumentation = getInstrumentation()
+        device = UiDevice.getInstance(instrumentation)
+    }
+
     // TODO: Pending Test Cases
-    //  - AudioPlayer works -> We need UiAutomator for this test. It cannot be tested using Espresso.
     //  - Image Upload does work -> We need UiAutomator for this test as sign-in process is not easy.
     //  - Custom Tab Intent -> We need UiAutomator for this test.
 
     @Before
     fun setup() {
         Intents.init()
+        // Press Home key before running the test
+        device.pressHome()
         EspressoIdlingResource.increment()
     }
 
     @After
     fun tearDown() {
         Intents.release()
+        // Press Home key before running the test
+        device.pressHome()
         EspressoIdlingResource.decrement()
     }
 
@@ -346,6 +363,71 @@ class MainActivityTest {
 
         onView(withId(R.id.forem_name_text_view))
             .check(matches(withText(containsString("DEV"))))
+    }
+
+
+    @Test
+    fun testMainActivity_loadDevVideoArticle_playVideo_pressHome_pictureInPictureIsAvailable() {
+        launchActivity<MainActivity>(createMainActivityIntent("https://dev.to/ben/why-forem-is-special-with-ben-halpern-1d61"))
+
+        onWebView()
+            .withElement(findElement(Locator.ID, "video-player-407788"))
+            .perform(webClick())
+
+        intended(hasComponent(VideoPlayerActivity::class.java.name))
+        intended(
+            hasExtra(
+                VideoPlayerActivity.VIDEO_URL_INTENT_EXTRA,
+                "https://dw71fyauz7yz9.cloudfront.net/video-upload__a8eaf9049e79b4def2008c6c4b9bff09/video-upload__a8eaf9049e79b4def2008c6c4b9bff09.m3u8"
+            )
+        )
+        intended(hasExtra(VideoPlayerActivity.VIDEO_TIME_INTENT_EXTRA, "0"))
+
+        device.pressHome()
+    }
+
+    @Test
+    fun testMainActivity_openArticle_shareArticle_opensShareDialogBox() {
+        launchActivity<MainActivity>(createMainActivityIntent("https://dev.to/ben/why-forem-is-special-with-ben-halpern-1d61"))
+
+        onWebView()
+            .withElement(findElement(Locator.ID, "article-show-more-button"))
+            .perform(webClick())
+
+        val shareDialogLink = device.wait(Until.findObject(By.text("https://dev.to/ben/why-forem-is-special-with-ben-halpern-1d61")), 2000)
+        assertThat(shareDialogLink).isNotNull()
+    }
+
+    @Test
+    fun testMainActivity_openPodcast_playPodcast_notificationIsVisible(){
+        launchActivity<MainActivity>(createMainActivityIntent("https://dev.to/devnews/s8e1-coding-under-bombing"))
+
+        onWebView()
+            .withElement(findElement(Locator.CLASS_NAME, "play-butt"))
+            .perform(webClick())
+
+        device.openNotification()
+
+        device.wait(Until.hasObject(By.pkg("com.android.systemui")), 10000)
+
+        val notificationStackScroller = UiSelector()
+            .packageName("com.android.systemui")
+            .resourceId("com.android.systemui:id/notification_stack_scroller")
+        val notificationStackScrollerUiObject: UiObject =
+            device.findObject(notificationStackScroller)
+        assertThat(notificationStackScrollerUiObject.exists()).isTrue()
+    }
+
+    @Test
+    fun testMainActivity_loadDev_openExternalLink_customTabIsVisible(){
+        launchActivity<MainActivity>(createMainActivityIntent("https://dev.to/contact"))
+
+        onWebView()
+            .withElement(findElement(Locator.LINK_TEXT, "a bug report"))
+            .perform(webClick())
+
+        val customTab = device.wait(Until.findObject(By.text("github.com")), 2000)
+        assertThat(customTab).isNotNull()
     }
 
     private fun createMainActivityIntent(foremUrl: String): Intent {

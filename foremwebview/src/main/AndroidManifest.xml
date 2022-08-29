@@ -16,4 +16,8 @@
       tools:targetApi="n" />
     <service android:name=".media.AudioService" />
   </application>
+
+  <instrumentation
+    android:name="androidx.test.runner.AndroidJUnitRunner"
+    android:targetPackage="com.forem.webview" />
 </manifest>
