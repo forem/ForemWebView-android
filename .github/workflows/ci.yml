@@ -36,3 +36,25 @@ jobs:
         with:
           name: unit_test_report
           path: app/build/reports/tests/testDebugUnitTest/
+
+  test:
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        api-level: [ 21, 29 ]
+        arch: [ x86, x86_64 ]
+        exclude:
+          - api-level: 21
+            arch: x86_64
+          - api-level: 29
+            arch: x86
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: ${{ matrix.arch }}
+          script: ./gradlew connectedCheck
