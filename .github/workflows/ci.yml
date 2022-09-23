@@ -57,4 +57,4 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}
-          script: ./gradlew connectedCheck
+          script: gradle connectedCheck
