@@ -355,6 +355,7 @@ class MainActivityTest {
     }
 
     @Test
+    @Ignore
     fun testMainActivity_loadDevTo_foremNameIsCorrectlyDisplayed() {
         launchActivity<MainActivity>(createMainActivityIntent(DEV_TO))
 
