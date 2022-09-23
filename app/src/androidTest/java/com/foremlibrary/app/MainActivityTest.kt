@@ -45,6 +45,7 @@ import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.concurrent.TimeoutException
@@ -419,6 +420,7 @@ class MainActivityTest {
     }
 
     @Test
+    @Ignore
     fun testMainActivity_loadDev_openExternalLink_customTabIsVisible(){
         launchActivity<MainActivity>(createMainActivityIntent("https://dev.to/contact"))
 
