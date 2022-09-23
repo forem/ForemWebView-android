@@ -39,6 +39,15 @@ jobs:
 
   test:
     runs-on: macOS-latest
+    strategy:
+      matrix:
+        api-level: [ 21, 29 ]
+        arch: [ x86, x86_64 ]
+        exclude:
+          - api-level: 21
+            arch: x86_64
+          - api-level: 29
+            arch: x86
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -46,7 +55,6 @@ jobs:
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
-          arch:  arm64-v8a
-          disable-animations: false
+          api-level: 29
+          arch: x86_64
           script: gradle connectedCheck
