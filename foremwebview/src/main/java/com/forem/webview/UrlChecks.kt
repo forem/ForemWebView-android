@@ -15,6 +15,7 @@ object UrlChecks {
         "api.twitter.com/oauth",
         "api.twitter.com/login/error",
         "api.twitter.com/account/login_verification",
+        "twitter.com",
         "github.com/login",
         "github.com/sessions/"
     )
