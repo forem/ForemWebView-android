@@ -2,15 +2,18 @@ package com.forem.webview
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.MailTo
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
@@ -267,9 +270,19 @@ class ForemWebViewClient(
 
     private fun openCustomTab(url: String) {
         if (activity != null) {
-            CustomTabsIntent.Builder()
-                .build()
-                .also { it.launchUrl(activity, Uri.parse(url)) }
+            try {
+                val customTabIntent = CustomTabsIntent.Builder().build()
+                customTabIntent.launchUrl(activity, Uri.parse(url))
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(activity, "Unable to open custom tab", Toast.LENGTH_SHORT).show()
+                Log.e("ForemWebViewClient", "openCustomTab: ActivityNotFoundException", e)
+            } catch (e: SecurityException) {
+                Toast.makeText(activity, "Unable to open custom tab", Toast.LENGTH_SHORT).show()
+                Log.e("ForemWebViewClient", "openCustomTab: SecurityException", e)
+            } catch (e: Exception) {
+                Toast.makeText(activity, "Unable to open custom tab", Toast.LENGTH_SHORT).show()
+                Log.e("ForemWebViewClient", "openCustomTab: Exception", e)
+            }
         }
     }
 
