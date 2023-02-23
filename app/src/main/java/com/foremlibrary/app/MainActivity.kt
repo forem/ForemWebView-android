@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.forem.webview.WebViewConstants
 import com.forem.webview.WebViewFragment
 import com.forem.webview.utils.WebViewStatus
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     private var currentForem = DEV_TO
 
+    private lateinit var bottomNavigationBar: ConstraintLayout
     private lateinit var loadingViewContainer: FrameLayout
     private lateinit var foremNameTextView: TextView
     private lateinit var backImageView: ImageView
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             loadOrUpdateFragment(url)
         }
 
+        bottomNavigationBar = findViewById(R.id.bottom_navigation_container)
         loadingViewContainer = findViewById(R.id.loading_view_container)
         foremNameTextView = findViewById(R.id.forem_name_text_view)
         backImageView = findViewById(R.id.back_image_view)
@@ -126,6 +129,13 @@ class MainActivity : AppCompatActivity() {
                     loadingViewContainer.visibility = View.VISIBLE
                 } else {
                     loadingViewContainer.visibility = View.GONE
+                }
+            }
+            webViewFragment.hideBottomNavigationBar.observe(this) { hideBottomBar ->
+                if (hideBottomBar) {
+                    bottomNavigationBar.visibility = View.GONE
+                } else {
+                    bottomNavigationBar.visibility = View.VISIBLE
                 }
             }
         } else {

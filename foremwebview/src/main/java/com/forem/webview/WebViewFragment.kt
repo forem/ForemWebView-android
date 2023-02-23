@@ -77,6 +77,11 @@ class WebViewFragment : Fragment(), FileChooserListener {
     /** Provides an observable which can reflect the current status of WebView. */
     val currentWebViewStatus = MutableLiveData(WebViewStatus.LOADING)
 
+    // This is required so as to compare with next upcoming y coordinate and accordingly decide
+    // if the scroll/movement was upward or downward.
+    private var currentYCoordinate = 0
+    val hideBottomNavigationBar = MutableLiveData(false)
+
     private val imagePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data != null && result.data?.data != null) {
@@ -97,6 +102,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
         val view = inflater.inflate(R.layout.web_view_fragment, container, false)
 
         currentWebViewStatus.value = WebViewStatus.LOADING
+        hideBottomNavigationBar.value = false
 
         noInternetConnectionContainer = view.findViewById(R.id.no_internet_connection_container)
         webView = view.findViewById(R.id.web_view)
@@ -187,6 +193,25 @@ class WebViewFragment : Fragment(), FileChooserListener {
         webView!!.webChromeClient = ForemWebChromeClient(fileChooserListener = this)
 
         webView!!.loadUrl(baseUrl)
+        setWebViewScrollListener(webView!!)
+    }
+
+    private fun setWebViewScrollListener(webView: WebView) {
+        webView.viewTreeObserver.addOnScrollChangedListener {
+            when {
+                currentYCoordinate > webView.scrollY -> {
+                    hideBottomNavigationBar.value = false
+                }
+                currentYCoordinate <= webView.scrollY -> {
+                    hideBottomNavigationBar.value = true
+                }
+                else -> {
+                    // Save side check, will never arise ideally
+                    hideBottomNavigationBar.value = false
+                }
+            }
+            currentYCoordinate = webView.scrollY
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -316,7 +341,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
             } else {
                 destroyOauthWebView()
             }
-        } else if (oauthWebView == null && webView!=null && webView!!.canGoBack()) {
+        } else if (oauthWebView == null && webView != null && webView!!.canGoBack()) {
             // Case where oauthWebView is fully inactive.
             webView?.goBack()
         } else {
