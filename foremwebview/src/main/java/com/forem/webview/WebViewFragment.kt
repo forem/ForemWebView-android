@@ -147,8 +147,6 @@ class WebViewFragment : Fragment(), FileChooserListener {
             BuildConfig.PASSPORT_AGENT_EXTENSION
         }
 
-        webView!!.loadUrl(baseUrl)
-
         // WebView Settings
         webViewSettings(webView!!)
         webView!!.settings.userAgentString = "$defaultUserAgent $extensionUserAgent"
@@ -187,6 +185,8 @@ class WebViewFragment : Fragment(), FileChooserListener {
 
         // WebView Chrome Client
         webView!!.webChromeClient = ForemWebChromeClient(fileChooserListener = this)
+
+        webView!!.loadUrl(baseUrl)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -316,9 +316,9 @@ class WebViewFragment : Fragment(), FileChooserListener {
             } else {
                 destroyOauthWebView()
             }
-        } else if (oauthWebView == null && webView!!.canGoBack()) {
+        } else if (oauthWebView == null && webView!=null && webView!!.canGoBack()) {
             // Case where oauthWebView is fully inactive.
-            webView!!.goBack()
+            webView?.goBack()
         } else {
             if (canExitApp) {
                 handleHomePageReached()
