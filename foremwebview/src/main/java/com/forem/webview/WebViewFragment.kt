@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -147,8 +148,6 @@ class WebViewFragment : Fragment(), FileChooserListener {
             BuildConfig.PASSPORT_AGENT_EXTENSION
         }
 
-        webView!!.loadUrl(baseUrl)
-
         // WebView Settings
         webViewSettings(webView!!)
         webView!!.settings.userAgentString = "$defaultUserAgent $extensionUserAgent"
@@ -187,6 +186,8 @@ class WebViewFragment : Fragment(), FileChooserListener {
 
         // WebView Chrome Client
         webView!!.webChromeClient = ForemWebChromeClient(fileChooserListener = this)
+
+        webView!!.loadUrl(baseUrl)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -300,6 +301,7 @@ class WebViewFragment : Fragment(), FileChooserListener {
      */
     private fun centrallyHandleBackNavigation(canExitApp: Boolean) {
         if (oauthWebView != null && oauthWebViewContainer!!.visibility == View.GONE) {
+            Log.d("TAGG", "WebViewFragment: centrallyHandleBackNavigation: 1")
             // Edge Case: Ideally this case should never arise.
             destroyOauthWebView()
             if (webView!!.canGoBack()) {
@@ -310,16 +312,20 @@ class WebViewFragment : Fragment(), FileChooserListener {
                 }
             }
         } else if (oauthWebView != null && oauthWebViewContainer!!.visibility == View.VISIBLE) {
+            Log.d("TAGG", "WebViewFragment: centrallyHandleBackNavigation: 2")
             // Case where oauthWebView is active.
             if (oauthWebView!!.canGoBack()) {
                 oauthWebView?.goBack()
             } else {
                 destroyOauthWebView()
             }
-        } else if (oauthWebView == null && webView!!.canGoBack()) {
+        } else if (oauthWebView == null && webView!=null && webView!!.canGoBack()) {
+            Log.d("TAGG", "WebViewFragment: centrallyHandleBackNavigation: 3")
             // Case where oauthWebView is fully inactive.
-            webView!!.goBack()
+            Log.d("TAGG", "centrallyHandleBackNavigation: canGoBack: " + webView?.canGoBack())
+            webView?.goBack()
         } else {
+            Log.d("TAGG", "WebViewFragment: centrallyHandleBackNavigation: 4")
             if (canExitApp) {
                 handleHomePageReached()
             }
